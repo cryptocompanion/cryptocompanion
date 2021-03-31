@@ -1,6 +1,7 @@
 ## pdf handling
 *.pdf
-!figures
+!figs/
+!figs/*
 
 ## This .gitignore copied from:
 ## https://github.com/github/gitignore/blob/master/TeX.gitignore
