@@ -1,0 +1,87 @@
+\documentclass[final]{scrartcl}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+% Custom package with preamble definitions
+\usepackage{mystyle}
+
+% Custom commands for typesetting specific names
+\usepackage{mycryptonames}
+
+\renewcommand{\circ}{\rightarrow}
+
+\usepackage{biblatex}
+\addbibresource{references.bib}
+
+\input{./tex/01-title.tex}
+
+\begin{document}
+
+\maketitle
+\input{./tex/02-abstract.tex}
+\clearpage
+
+\tableofcontents
+\clearpage
+
+\input{./tex/03-preface.tex}
+
+\clearpage
+\section{Foundations} \label{section:foundations}
+\input{./tex/04-foundations/a-foundations-intro.tex}    
+\input{./tex/04-foundations/b-security.tex}            
+\input{./tex/04-foundations/c-computation.tex}   
+\input{./tex/04-foundations/d-runtime.tex}         
+\input{./tex/04-foundations/e-assumptions.tex}    
+\input{./tex/04-foundations/g-probability.tex}          
+\input{./tex/04-foundations/h-foundations-ending.tex}
+
+\clearpage
+\section{Definitions and notation} \label{section:definitions}
+\input{./tex/05-definitions/a-def-intro.tex}      
+\input{./tex/05-definitions/b-math.tex}            
+\input{./tex/05-definitions/c-pseudocode.tex}      
+\input{./tex/05-definitions/d-security.tex}        
+\input{./tex/05-definitions/e-definitions-ending.tex}
+
+\clearpage
+\section{Primitives} \label{section:primitives}
+\input{./tex/06-primitives/0-primitives-intro.tex}
+\input{./tex/06-primitives/a-owf.tex}
+\input{./tex/06-primitives/b-hb.tex}
+\input{./tex/06-primitives/c-prg.tex}
+\input{./tex/06-primitives/d-prf.tex}
+\input{./tex/06-primitives/e-mac.tex}
+\input{./tex/06-primitives/f-se.tex} 
+\input{./tex/06-primitives/g-sigs.tex}
+\input{./tex/06-primitives/h-pke.tex}
+
+\clearpage
+\section{Constructions and Theorems} \label{section:theorems}
+\input{./tex/07-theorems/a-owf.tex}
+\input{./tex/07-theorems/b-prf.tex}
+\input{./tex/07-theorems/c-mac.tex}
+\input{./tex/07-theorems/d-enc.tex}
+
+\clearpage
+\section{Writing proofs} \label{section:proof-writing}
+\input{./tex/08-proof-writing/a-proof-intro.tex}
+\input{./tex/08-proof-writing/b-reductions.tex}
+\input{./tex/08-proof-writing/c-code-equivalence.tex}
+\input{./tex/08-proof-writing/d-recipes.tex}
+\input{./tex/08-proof-writing/e-proof-ending.tex}
+
+\clearpage
+\section{Proofs} \label{section:proofs}
+\input{./tex/09-proofs/a-proofs-intro.tex}
+\input{./tex/09-proofs/b-owf.tex}
+
+\clearpage
+\input{./tex/11-acknowledgements.tex}
+\printbibliography
+
+\clearpage
+\appendix
+\input{./tex/10-appendicies/a-advantage.tex}
+\end{document}

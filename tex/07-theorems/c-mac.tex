@@ -1,0 +1,70 @@
+\subsection{Theorems on generic MAC transformations}
+We state basic properties of MACs. Namely, that appending the message to the MAC preserves UNF-CMA security, using only half of the key preserves UNF-CMA security (this is an effect of asymptotic study and not a recommendation for practical use...) and modifying the MAC
+scheme on a negligible fraction of the \emph{keys} preserves UNF-CMA-security.
+
+\begin{theorem}[Appending the message]
+If $\m$ is an UNF-CMA-secure MAC scheme, then $\m_{\text{leak}}$ is also UNF-CMA-secure, where $\m_{\text{leak}}$ is defined as follows:
+\begin{center}
+\begin{pchstack}
+\procedure{$\m_\text{leak}.\mac(k,x)$}{
+t'\gets \m.\mac(k,x)\\
+t\gets x||t'\\
+\pcreturn t}
+\pchspace
+\procedure{$\m_\text{leak}.\ver(k,x,t)$}{
+x'\gets t_{1..\abs{x}}\\
+t'\gets t_{\abs{x}+1..\abs{t}}\\
+\pcif x'\neq x:\\
+\pcind \pcreturn 0\\
+d\gets \m.\ver(k,x,t')\\
+\pcreturn d}
+\end{pchstack}
+\end{center}
+\end{theorem}
+
+We state the following theorem for MACs, but it holds more generally (see Theorem \ref{thm:PRF-negl-mod}). Namely, when modifying a cryptographic scheme on a negligible fraction of the keys, then it remains secure.
+
+\begin{theorem}[Negligible modification]
+If $\m$ is an UNF-CMA-secure MAC scheme, if $\m_{\text{bad}}$ is a scheme which satisfies the syntax of a MAC scheme
+(but not necessarily the security) and if $P:\bin^*\rightarrow\bin$ is a polynomial-time computable predicate with
+\[\probsub{k\sample\bin^\lambda}{P(k)=1}\]
+being negligible in $\lambda$, then the MAC scheme $\m_{\text{tweak}}$ is UNF-CMA-secure:
+\begin{center}
+\begin{pchstack}
+\procedure{$\m_\text{tweak}.\mac(k,x)$}{
+\pcif P(k)=0:\\
+\pcind t\gets \m.\mac(k,x)\\
+\pcif P(k)=1:\\
+\pcind t\gets \m_{\text{bad}}.\mac(k,x)\\
+\pcreturn t}
+\pchspace
+\procedure{$\m_\text{tweak}.\ver(k,x,t)$}{
+\pcif P(k)=0:\\
+\pcind d\gets \m.\ver(k,x,t)\\
+\pcif P(k)=1:\\
+\pcind d\gets \m_{\text{bad}}.\ver(k,x,t)\\
+d\gets \m.\\
+\pcreturn d}
+\end{pchstack}
+\end{center}
+\end{theorem}
+
+\begin{theorem}[Using shorter keys]
+If $\m$ is an UNF-CMA-secure MAC scheme and if $c$ is a constant, then the MAC scheme $\m_{c\text{-short}}$ is UNF-CMA-secure:
+\begin{center}
+\begin{pchstack}
+\procedure{$\m_\text{c\text{-short}}.\mac(k,x)$}{
+\ell\gets \left\lceil\frac{\abs{k}}{c}\right\rceil\\
+k'\gets k_{1..\ell}\\
+t\gets \m.\mac(k',x)\\
+\pcreturn t}
+\pchspace
+\procedure{$\m_\text{c\text{-short}}.\ver(k,x,t)$}{
+\ell\gets \left\lceil\frac{\abs{k}}{c}\right\rceil\\
+k'\gets k_{1..\ell}\\
+d\gets \m.\ver(k',x,t)\\
+d\gets \m.\\
+\pcreturn d}
+\end{pchstack}
+\end{center}
+\end{theorem}

@@ -1,0 +1,151 @@
+\newpage
+\subsection{Pseudorandom functions (PRF)}
+If two parties share a random function, they can communicate securely. A random function is a function where for each input value, an output is drawn, uniformly at random. A \emph{pseudo}random function (PRF) is a keyed deterministic(!) function which looks like a random function to outsiders (who do not know the key). Here, outsiders are observers which can observe inputs and outputs of the function. For a deterministic function (with a public description, cf. \emph{Kerkoff Principle}) to be computationally indistinguishable, the deterministic function needs to rely on a secret, namely a secret key. Importantly, based on this key (of length $\lambda$), a pseudorandom function is able to emit a behaviour which looks like that of a random function although the description of the latter consists of exponentially many random bits. We will consider different kinds of PRFs. A ($\lambda$,$\lambda$)-PRF maps fixed inputs of length $\lambda$ to fixed-length outputs of length $\lambda$. A ($*$,$\lambda$)-PRF maps inputs of arbitrary length to fixed-length outputs of length $\lambda$. Finally, a ($\lambda$,$*$)-PRF maps inputs of fixed length $\lambda$ to an arbitrary output length, specified by the caller of the function. ($*$,$*$)-PRFs map inputs or arbitrary length $\lambda$ to an arbitrary output length, specified by the caller of the function. We encode all these PRF-variants into the same syntax by including a pair of parameters $(\pcvar{in},\pcvar{out})$, each of which can be $*$ or $\lambda$.
+
+\begin{syntax}[($\pcvar{in}$,$\pcvar{out}$)-PRF syntax]
+Consider a pair $\pcvar{in},\pcvar{out}\in\{\lambda,*\}$. A ($\pcvar{in}$,$\lambda$)-PRF is a (deterministic) function 
+\[f : \bin^*\times \bin^* \rightarrow \bin^*\]
+that can be computed in deterministic polynomial time, which satisfies the correctness criterion
+\[\forall \lambda\in\NN\,\forall k\in\bin^\lambda,x\in\bin^{\pcvar{in}}\;\abs{f(k,x)}=\lambda.\]
+A ($\pcvar{in}$,$*$)-PRF is a (deterministic) function 
+\[f : \bin^*\times \bin^*\times \NN \rightarrow \bin^*\]
+that can be computed in deterministic polynomial time, which satisfies the correctness criterion
+\[\forall \lambda\in\NN\,\forall k,x\in\bin^{\pcvar{in}}\;\abs{f(k,x,L)}=L.\]
+\end{syntax}
+
+Note that $(\pcvar{in},*)$-PRFs take three inputs (with a length parameter $L$ as the last input) and $(\pcvar{in},\lambda)$-PRFs only
+take two. This translates into the interface given to the adversary, since the adversary should also be allowed to
+specify the output length for a $(\pcvar{in},*)$-PRFs. Thus, we provide different security definitions, the first one
+for $(\pcvar{in},\lambda)$-PRFs and the second one for $(\pcvar{in},*)$-PRFs. In addition, we also provide modular versions
+of the definitions.
+
+
+\begin{security}[$(\pcvar{in},\lambda)$-PRF]
+Consider $\pcvar{in}\in\{\lambda,*\}$. Let the games $\M{Gprf}_f^0$, and $\M{Gprf}^1$ be defined as follows
+\begin{codebox}
+\begin{center}
+    \begin{pchstack}
+          \begin{pcvstack}
+            \underline{\underline{$\M{Gprf}^0$}}\\
+                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+				\pcvar{in}\text{:} \< \quad \text{input length}\;\lambda\text{ or }*\\
+			  f\text{:} \< \quad \text{function},\,(\pcvar{in},\lambda)\text{-PRF} 
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+																	k\text{:} \< key
+			              }
+										\pcvspace
+      \procedure{$\O{EVAL}(x)$}{
+			 \pcassert x\in\bin^{\text{in}}\\
+			 \pcif k=\bot:\\
+			\pcind k\sample\bin^\lambda\\
+        y\gets f(k,x)\\
+        \pcreturn y}
+    \end{pcvstack}
+            \pchspace
+    \begin{pcvstack}
+            \underline{\underline{$\M{Gprf}^1$}}\\
+                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+				\pcvar{in}\text{:} \< \quad \text{input length}\;\lambda\text{ or }*\\
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				T\text{:} \< \quad \pckw{table}[\pctype{bitstring} \to \pctype{bitstring}] 
+			              }
+										\pcvspace
+      \procedure{$\O{EVAL}(x)$}{
+			 \pcassert x\in\bin^{\text{in}}\\
+				\pcif T[x] = \bot\\
+				\pcind T[x]\sample\bin^\lambda\\
+				y\gets T[x]\\
+        \pcreturn y}
+		\end{pcvstack}
+	\end{pchstack}
+	\end{center}
+\end{codebox}
+\vspace{5mm}
+A $(\pcvar{in},\lambda)$-PRF $f$ is $(\pcvar{in},\lambda)$-PRF-secure if for all PPT adversaries $\adv$, the real game $\M{Gprf}_f^0$ and ideal game $\M{Gprg}^1$ are computationally indistinguishable, that is, the advantage
+\[\mathbf{Adv}_{\adv}^{
+  \M{Gprf}_f^0,
+  \M{Gprf}^1}
+	(\lambda):=\abs{\prob{1=\adv\circ \M{Gprf}_f^0}-\prob{1=\adv\circ \M{Gprf}^1}}\]
+is negligible in $\lambda$.
+\end{security}
+
+\begin{remark}
+The table $T$ models a random function, since whenever it is called, it samples a fresh image value of length $\lambda$---unless the same input was queried before. In this case, it returns the same answer.
+\end{remark}
+
+
+
+
+
+\begin{security}[$(\pcvar{in},*)$-PRF]
+Consider $\pcvar{in}\in\{\lambda,*\}$. Let the games $\M{Glprf}_f^0$, and $\M{Glprf}^1$ be defined as follows
+\begin{codebox}
+\begin{center}
+    \begin{pchstack}
+          \begin{pcvstack}
+            \underline{\underline{$\M{Glprf}^0$}}\\
+                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+				\pcvar{in}\text{:} \< \quad \text{input length}\;\lambda\;\text{or}\;*\\
+				\pcvar{out}\text{:} \< \quad \text{output length}*\\
+			  f\text{:} \< \quad \text{function},\,(\pcvar{in},*)\text{-PRF} 
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+																	k\text{:} \< key
+			              }
+										\pcvspace
+      \procedure{$\O{EVAL}(x,L)$}{
+			 \pcassert x\in\bin^{\text{in}}\\
+			 \pcif k=\bot:\\
+			\pcind k\sample\bin^\lambda\\
+        y\gets f(k,x,L)\\
+        \pcreturn y}
+    \end{pcvstack}
+            \pchspace
+    \begin{pcvstack}
+            \underline{\underline{$\M{Glprf}^1$}}\\
+                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+				\pcvar{in}\text{:} \< \quad \text{input length}\;\lambda\;\text{or}\;*\\
+				\pcvar{out}\text{:} \< \quad \text{output length}\;*\\
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				T\text{:} \< \quad \pckw{table}[\pctype{bitstring},\pctype{integer} \to \pctype{bitstring}] 
+			              }
+										\pcvspace
+      \procedure{$\O{EVAL}(x,L)$}{
+			 \pcassert x\in\bin^{\text{in}}\\
+				\pcif T[x,L] = \bot\\
+				\pcind T[x,L]\sample\bin^L\\
+				y\gets T[x,L]\\
+        \pcreturn y}
+		\end{pcvstack}
+	\end{pchstack}
+	\end{center}
+\end{codebox}
+\vspace{5mm}
+A $(\pcvar{in},*)$-PRF $f$ is PRF-secure if the real game $\M{Glprf}_f^0$ and ideal game $\M{Glprg}^1$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
+\[\mathbf{Adv}_{\adv}^{
+  \M{Glprf}_f^0,
+  \M{Glprg}^1}
+	(\lambda) 
+	:=\abs{\prob{1=\adv\circ \M{Glprf}_f^0}-\prob{1=\adv\circ \M{Glprf}^1}}	\]
+is negligible in $\lambda$.
+\end{security}
+
+
+\begin{remark}
+The table $T$ models a random function, since whenever it is called, it samples a fresh image value of appropriate length---unless the same input was queried before. In this case, it returns the same answer.
+\end{remark}

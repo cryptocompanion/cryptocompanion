@@ -1,0 +1,7 @@
+\subsection{Probability}\label{foundations:probability}
+
+The sentence we started this section with was about an adversary breaking a system with a certain \emph{probability}. The idea that cryptographic systems only work with some probability is slightly unsettling: we would like to think our data is absolutely safe. Unfortunately, this sort of cryptography is impossible: it is always possible for the adversary to guess the correct key and break the cryptographic system. The task of a cryptographic system, then, is to minimize the success probability of the adversary.
+
+To reason about cryptographic systems, we need an understanding of probability. Advanced tools from statistics and probability theory are needed to design low-level cryptographic tools. However, since our focus is on general results rather than designing low-level primitives, only an elementary understanding of probability is needed.
+
+Probability statements throughout this course are \emph{discrete} statements, that can be easily defined by \emph{counting}. For example, when you need to calculate the success probability of an adversary, all you have to do is figure out how many possible outcomes there are, and how many of them are successful. To make the example concrete, say that a system has a randomly chosen key made up of $n$ bits and the adversary attempts to break the system by guessing the key. Then there are $2^n$ possible keys, and only one is correct. We can then conclude that the success probability of the adversary is $\frac{1}{2^n}$.

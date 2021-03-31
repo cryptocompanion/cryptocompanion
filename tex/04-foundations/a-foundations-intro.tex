@@ -1,0 +1,10 @@
+In cryptography, we want to make statements such as the following:
+\begin{quote}
+No adversary running in time at most $t$ can break the system with probability greater than $\epsilon$.
+\end{quote}
+
+There are many layers to this statement. You might just argue informally that a system is secure, without being precise about what you are trying to prove. We believe this is a bad approach, and is prone to mistakes. This document introduces a more formal way of dealing with security, which requires careful consideration of what security statements like the one above mean. We start off by discussing how we model security. We explain what exactly we mean by an adversary, what a cryptographic system is and what it means to break it. These concepts are useful on their own, but for a more thorough understanding we have to discuss more foundational issues. We borrow from computer science and mathematics to explain what we mean by algorithms, how we measure their run-time, and how we reason about probability. In addition, we elaborate on two topics in cryptography: the need for assumptions in proofs of security, and describing larger systems by composing modular packages.
+
+Reading this section will help you develop a formal understanding of the concepts this book deals with. However, it isn't necessary to read it, at least to start with. The parts from the definition section on are self-contained. If you like to learn by doing, it might be better to start doing the exercises, and return here if you get confused by something. You can also start off reading the parts that interest you the most. We provide forward and backward pointers throughout the document.
+
+This section deals with mathematics and computer science, so we will add remarks for those with a background in these areas as we go. If you study another subject, both or neither of these comments might be useful to you.

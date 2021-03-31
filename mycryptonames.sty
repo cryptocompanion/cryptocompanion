@@ -1,0 +1,53 @@
+\ProvidesPackage{mycryptonames}
+
+% Schemes and functions
+\newcommand{\kgen}{\O{kgen}}
+\newcommand{\alg}{\O{alg}}
+\newcommand{\m}{\StyleModel{m}}
+\newcommand{\s}{\StyleModel{s}}
+\renewcommand{\sig}{\O{sig}}
+\newcommand{\pke}{\StyleModel{pke}}
+\renewcommand{\mac}{\O{mac}}
+\newcommand{\se}{\StyleModel{se}}
+\renewcommand{\enc}{\O{enc}}
+\renewcommand{\dec}{\O{dec}}
+\newcommand{\ver}{\O{ver}}
+\renewcommand{\verify}{\O{ver}}
+\renewcommand{\sig}{\O{sig}}
+\newcommand{\receive}{\O{receive}}
+\newcommand{\binary}{\textsf{bin}}
+
+% Packages
+
+\newcommand{\ID}{\M{ID}}
+
+% Security notions
+
+\newcommand{\unfcma}{\M{UNF-CMA}}
+\newcommand{\unfcmaac}{\M{UNF-CMA-AC}}
+\newcommand{\flunfcma}{\M{FL-UNF-CMA}}
+
+% Pseudocode
+
+\newcommand{\pcassert}{\mathbf{assert}\;}
+\newcommand{\cnt}{\textsf{ctr}}
+\newcommand{\nonce}{\StyleModel{nonce}}
+
+% General
+
+\newcommand{\G}{\mathcal{G}}
+\renewcommand{\H}{\textsf{H}}
+\newcommand{\RO}{\textsf{RO}}
+\newcommand{\RPO}{\textsf{RPO}}
+\renewcommand{\O}[1]{\ensuremath{\mathsf{#1}}}
+\newcommand{\E}{\textsf{E}}
+\newcommand{\ininterface}[1]{[#1\rightarrow]} %{I^{in}_{#1}}
+\newcommand{\outinterface}[1]{[\rightarrow#1]} %{I^{out}_{#1}}
+\newcommand{\StyleModel}[1]{\V{{#1}}}
+\newcommand{\V}[1]{\ensuremath{\mathit{#1}}}
+\newcommand{\M}[1]{\ensuremath{\text{\texttt{#1}}}}
+\newcommand{\hLen}{n}
+\renewcommand{\prp}{\StyleModel{prp}}
+\newcommand{\ac}{\StyleModel{ac}}
+\newcommand{\ch}{\StyleModel{ch}}
+\newcommand{\send}{\StyleModel{send}}

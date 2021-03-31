@@ -1,0 +1,120 @@
+\ProvidesPackage{mystyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     Packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Fonts
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Others
+\usepackage{caption}
+\usepackage[perpage]{footmisc}
+\usepackage{subcaption}
+\usepackage{mdframed}
+\newmdenv[hidealllines=false]{codebox}
+\mdfdefinestyle{myenvs}{%
+  hidealllines=true,%
+  nobreak=true, % comment this to allow breaking
+  leftmargin=0pt,
+  rightmargin=0pt,
+  innerleftmargin=0pt,
+  innerrightmargin=0pt,
+}
+\usepackage{abstract}
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{xspace}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows, calc}
+\usepackage{array}
+\usepackage{subcaption}
+\usepackage[probability,adversary,sets,notions,operators,complexity,keys,primitives,asymptotics,advantage]{cryptocode}
+\usepackage{savesym}
+\usepackage{relsize}
+\savesymbol{cb}
+\usepackage{combelow}
+\usepackage[normalem]{ulem}
+\usepackage{wrapfig}
+%\usepackage[a4paper, total={2.8in, 8in}]{geometry}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         Theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{claim}[definition]{Claim}
+\newtheorem{theorem}[definition]{Theorem}
+
+\newtheorem*{definition*}{Definition}
+
+\newtheorem{lemma}{Lemma}
+
+\newtheoremstyle{syntax}
+    {\topsep}%
+    {\topsep}%
+    {\addtolength{\@totalleftmargin}{2em}
+    \addtolength{\linewidth}{-2em}
+    \parshape 1 2em \linewidth}% body font
+    {}%
+    {\bfseries}%
+    {}%
+    {\newline}%
+    {\thmname{#1}{\thmnumber{ #2}}\thmnote{ --- #3}}%
+\theoremstyle{syntax}
+\newmdtheoremenv[style=myenvs]{syntax}[definition]{Syntax definition}
+
+\newtheoremstyle{security}
+    {\topsep}%
+    {\topsep}%
+    {\addtolength{\@totalleftmargin}{2em}
+    \addtolength{\linewidth}{-2em}
+    \parshape 1 2em \linewidth}% body font
+    {}%
+    {\bfseries}%
+    {}%
+    {\newline}%
+    {\thmname{#1}{\thmnumber{ #2}}\thmnote{ --- #3}}%
+\theoremstyle{security}
+\newmdtheoremenv[style=myenvs]{security}[definition]{Security definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         Math shortcuts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\R}{\mathbb{R}} 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}} 
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\card}[1]{\abs{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Variable and procedures names
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\pcvar}[1]{\ensuremath{\mathit{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Layouting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\pckw}[1]{\highlightkeyword{#1}}
+\newcommand{\pctype}[1]{\mathsf{#1}}

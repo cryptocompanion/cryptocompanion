@@ -1,0 +1,98 @@
+\newpage
+\subsection{Pseudorandom generators (PRG)}
+A pseudorandom generator is an algorithm that takes random input and produces longer pseudorandom output.
+
+\begin{syntax}[Pseudorandom generator (PRG)]
+A pseudorandom generator with stretch $s$ is a deterministic function
+  \[g:\bin^*\rightarrow\bin^*\] 
+that can be computed in deterministic polynomial time, which satisfies the correctness criteria
+\begin{align*}
+\forall \lambda\in\NN&:\ s(\lambda)\geq 1 \\
+\forall \lambda\in\NN\; \forall x\in\bin^\lambda&:\ \abs{g(x)}=\lambda+s(\lambda) \\
+\end{align*}
+\end{syntax}
+
+Pseudorandom generators are not as natural to define in terms of security games as other primitives. We therefore define it first by a \emph{security experiment}, before giving a security game formulation for completeness.
+
+\begin{security}[Pseudorandomness]
+  \vspace{5mm}
+Let ${\mathsf{Exp}}_{g,s,\adv}^{\mathsf{PRG},0}(1^\lambda)$ and ${\mathsf{Exp}}_{g,\adv}^{\mathsf{PRG},1}(1^\lambda)$ be the security experiments defined by
+\begin{center}
+  \begin{pchstack}
+    \procedure{${\mathsf{Exp}}_{g,s,\adv}^{\mathsf{PRG},0}(1^\lambda)$}{
+    x\sample\bin^\lambda\\
+    y\gets g(x)\\
+    d^*\sample\adv(1^\lambda,y)\\
+    \pcreturn d^*}
+  \pchspace
+    \procedure{${\mathsf{Exp}}_{s,\adv}^{\mathsf{PRG},1}(1^\lambda)$}{
+    \\
+    y\sample\bin^{\lambda+s(\lambda)}\\
+    d^*\sample\adv(1^\lambda,y)\\
+    \pcreturn d^*}
+  \end{pchstack}
+  \end{center}
+A PRG $g$ is pseudorandom if for all PPT adversaries $\adv$ the difference
+\[ \big|\prob{{\mathsf{Exp}}_{g,s,\adv}^{\mathsf{PRG},0}(1^\lambda) = 1} 
+   - \prob{{\mathsf{Exp}}_{s,\adv}^{\mathsf{PRG},1}(1^\lambda) = 1}\big| \]
+is negligible in $\lambda$.
+\end{security}
+
+
+\begin{security}[PRG]
+    Let $\textsf{Gprg}_g^0$ and $\textsf{Gprg}_g^1$ be the games
+    \begin{codebox}
+    \begin{center}
+        \begin{pchstack}
+            \pchspace
+              \begin{pcvstack}
+                \underline{\underline{$\textsf{Gprg}_g^0$}}\\
+                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+				s(\lambda)\text{:} \< \quad \text{length-expansion}\\
+			  g\text{:} \< \quad \text{function},\,\abs{g(x)}=\abs{x}+s(\abs{x}) 
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				y\text{:} \< \quad \text{image value} 
+			              }
+										\pcvspace
+              \procedure{$\O{SAMPLE}()$}{
+                \pcassert y = \bot\\
+								x\sample\bin^\lambda\\
+                y \gets g(x)\\
+                \pcreturn y}
+        \end{pcvstack}
+                \pchspace
+                \begin{pcvstack}
+                    \underline{\underline{$\textsf{Gprg}^1$}}\\
+                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+				s(\lambda)\text{:} \< \quad \text{length-expansion}\\
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				y\text{:} \< \quad \text{random value} 
+			              } 
+									\pcvspace
+              \procedure{$\O{SAMPLE}()$}{
+                \pcassert y = \bot\\
+								\\
+                y \sample \bin^{\lambda+s(\lambda)}\\
+                \pcreturn y}
+            \end{pcvstack}
+        \end{pchstack}
+    \end{center}
+  \end{codebox}
+    A pseudorandom generator $g$ is PR-secure if the real and ideal games $\textsf{Gprg}_g^0$ and $\textsf{Gprg}^1$ are computationally indistinguishable, i.e., that is, the advantage
+\[\mathbf{Adv}_{\adv}^{
+  \M{Gprg}_g^0,
+  \M{Gprg}^1}
+	(\lambda):=\abs{\prob{1=\adv\circ \M{Gprg}_g^0}-\prob{1=\adv\circ \M{Gprg}^1}}\]
+is negligible in $\lambda$.
+\end{security}
+\begin{remark}
+In the course, when saying that \emph{$g$ is a PRG}, we mean a \emph{$g$ is a PR-secure PRG}.
+\end{remark}

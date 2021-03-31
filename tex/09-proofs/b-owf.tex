@@ -1,0 +1,175 @@
+\subsection{Proofs for One-Way Function Transformations}
+The proofs in this section do not fully follow the pattern outlined in the previous section. The reason is that the proofs in this section make statements about one-way functions, which are best formulated as win-loose security experiments, so we just use the pattern of arguing by contradiction, but not the more rigid structure presented in the previous section. This being said, the statements we prove in these sections are not very deep (even though some technicalities occur), and the proofs might be a good warm-up for later proofs, especially since they nicely showcase how to transform an adversary against some ``fancy'' OWF into an adversary against the underlying basic OWF.
+
+\begin{figure}
+\begin{codebox}
+	\begin{center}
+		\begin{pchstack}
+  		\begin{pcvstack}
+				  \procedure{$\adv^f_{\text{app-zer}}(1^\lambda,y)$}{
+					y'\gets y||0^{\abs{x}}\\
+					x'\sample \adv_g(1^\lambda,y')\\
+					\pcreturn x'}			
+					\pcvspace
+				  \procedure{$\adv^f_{\text{app-ones}}(1^\lambda,y)$}{
+					y'\gets y||0^{\abs{x}}\\
+					x'\sample \adv_g(1^\lambda,y')\\
+					\pcreturn x'}
+  		\end{pcvstack}
+					\pchspace
+				  \procedure{$\adv^f_{\text{leak-l}}(1^\lambda,y)$}{
+					b\sample\bin\\
+          m\gets \lambda-b\\
+					x_\ell\sample\bin^m\\
+					y'\gets x_\ell||y\\
+					\lambda'\gets \lambda+m\\
+					x'\sample \adv_g(1^{\lambda'},y')\\
+					x^{\prime\prime}\gets x'_{m+1..\abs{x'}}\\
+					\pcreturn x^{\prime\prime}
+					}
+					\pchspace
+				  \procedure{$\adv^f_{\text{leak-r}}(1^\lambda,y)$}{
+					b\sample\bin\\
+          m\gets \lambda\\
+					x_r\sample\bin^{\lambda+b}\\
+					y'\gets y||x_r\\
+  				\lambda'\gets \lambda+b+m\\
+					x'\sample \adv_g(1^{\lambda'},y')\\
+					x^{\prime\prime}\gets x'_{1..m}\\
+					\pcreturn x^{\prime\prime}
+					}
+					\pchspace
+				  \procedure{$\adv^f_{\text{ign-l}}(1^\lambda,y)$}{
+					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+					\\
+					x_r\gets x_{m+1..\abs{x}}\\					
+					y\gets f(x_r)\\
+					\pcreturn y}
+					\pchspace
+				  \procedure{$\adv^f_{\text{ign-r}}(1^\lambda,y)$}{
+					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+					x_\ell\gets x_{1..m}\\
+					\\					
+					y\gets f(x_\ell)\\
+					\pcreturn y}
+		\end{pchstack}
+	\end{center}
+	\end{codebox}
+	\caption{Constructions of adversaries against the underlying OWF $f$ assuming an adversary against the construction $g$.\label{fig:owfreductions}}
+	\end{figure}
+
+\paragraph{Proof of Theorem~\ref{thm:owf-app-zer}}
+Recall that Theorem~\ref{thm:owf-app-zer} states that if $f$ is a one-way function, then $g^f_{\text{app-zer}}$ and $g^f_{\text{app-ones}}$ are one-way functions, too. We first prove the statement for $g^f_{\text{app-zer}}$.
+In order to prove that $g^f_{\text{app-zer}}$ \emph{is} a one-way function, we will first assume towards contradiction that it \emph{isn't}. We will see that this leads us to a contradiction with the assumption that $f$ is a one-way function. Thus, if $f$ is a one-way function, then
+$g^f_{\text{app-zer}}$ must be a one-way function, too. We now go into the details of this proof.
+
+Assume towards contradiction that $g^f_{\text{app-zer}}$ is not a one-way function. Then, by definition of one-wayness (Security Definition~\ref{secdef:owf}), there must be a PPT adversary $\adv_g$ against $g^f_{\text{app-zer}}$ such that $\prob{1={\mathsf{Exp}}_{g^f_{\text{app-zer}},\adv_g}^{\mathsf{OW}}(1^\lambda)}$ is non-negligible. From $\adv_g$, we will now construct another PPT adversary $\adv^f_{\text{app-zer}}$ such that 
+\begin{equation}\label{eq:reductionowfzeroes}
+\prob{1={\mathsf{Exp}}_{f,\adv^f_{\text{app-zer}}}^{\mathsf{OW}}(1^\lambda)}=\prob{1={\mathsf{Exp}}_{g^f_{\text{app-zer}},\adv_g}^{\mathsf{OW}}(1^\lambda)}
+\end{equation}
+and thus, $\prob{1={\mathsf{Exp}}_{f,\adv^f_{\text{app-zer}}}^{\mathsf{OW}}(1^\lambda)}$ is non-negligible, too, leading to a contradiction with the one-wayness of $f$. Thus, all we are left to do is to prove the following claim.
+\begin{claim}\label{claim:owfsimple}
+For each PPT adversary $\adv_g$ against the one-wayness of $g^f_{\text{app-zer}}$, there exists a PPT adversary $\adv^f_{\text{app-zer}}$ against the one-wayness of $f$ such that Equation~\ref{eq:reductionowfzeroes} holds.
+\end{claim}
+To prove Claim~\ref{claim:owfsimple}, we need to construct $\adv^f_{\text{app-zer}}$, see the leftmost column of Figure~\ref{fig:owfreductions}. As $\adv^f_{\text{app-zer}}$ merely adds $\lambda$ many zeroes and else essentially has the same runtime as $\adv_g$, the adversary $\adv^f_{\text{app-zer}}$ is polynomial-time, since $\adv_g$ runs in polynomial-time and since the additional operations are only linear-time in $\lambda$. We now need to prove that Equation~\ref{eq:reductionowfzeroes} holds. We prove this by showing that, essentially, the two experiments behave in the same way. I.e., below, we start with experiment ${\mathsf{Exp}}_{f,\adv^f_{\text{app-zer}}}^{\mathsf{OW}}(1^\lambda)$, where from the left-most column to the second column, we inline the code of ${\mathsf{Exp}}_{f,\adv^f_{\text{app-zer}}}^{\mathsf{OW}}(1^\lambda)$ (marked in grey). We also replace $y$ by $f(x)$ (marked in grey), since it is the same value.
+\begin{center}
+\begin{pchstack}
+	  \procedure{${\mathsf{Exp}}_{f,\adv^f_{\text{app-zer}}}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		y\gets f(x)\\
+		x'\sample\adv^f_{\text{app-zer}}(1^\lambda,y)\\
+		\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif f(x')=y:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+		    \pchspace
+	  \procedure{${\mathsf{Exp}}_{f,\adv^f_{\text{app-zer}}}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		y\gets f(x)\\
+		\gamechange{$y'\gets y||0^\lambda$}\\		
+		\gamechange{$x'\sample\adv_g(1^\lambda,y')$}\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif f(x')=\gamechange{$f(x)$}:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+		\pchspace
+			  \procedure{${\mathsf{Exp}}_{g^f_{\text{app-zer}},\adv_g}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		\gamechange{$y\gets f(x)||0^{\abs{x}}$}\\
+		\\
+		x'\sample\adv_g(1^\lambda,y)\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif \gamechange{$f(x')||0^{\abs{x'}}=f(x)||0^{\abs{x}}$}:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+				\pchspace
+			  \procedure{${\mathsf{Exp}}_{g^f_{\text{app-zer}},\adv_g}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		y\gets g^f_{\text{app-zer}}(x)\\
+		\\
+		x'\sample\adv_g(1^\lambda,y)\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif g^f_{\text{app-zer}}(x')=y:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+\end{pchstack}
+\end{center}
+The right-most experiment (column 4) contains the description of ${\mathsf{Exp}}_{g^f_{\text{app-zer}},\adv_g}^{\mathsf{OW}}(1^\lambda)$.
+From column 4 to column 3, we inlined the code of $g^f_{\text{app-zer}}(x)$ twice and we replaced $y$ by its value. Now, the proof concludes by observing that column 2 and column 3 essentially contain the same code. We only need to observe the following: Checking $f(x')=f(x)$ (column 2) is the same as performing the same checks with $\lambda$ zeroes appended to it---note that at this point, both, $\abs{x}$ and  $\abs{x'}$ are equal to $\lambda$. In column 3, if we additionally rename variable $y$ to $y'$, we yield the same code.
+
+\paragraph{Proof for $g^f_{\text{app-ones}}$} The proof for $g^f_{\text{app-ones}}$ is analogous to the proof for $g^f_{\text{app-zer}}$. We first assume towards contradiction that $g^f_{\text{app-ones}}$ is not a one-way function. This implies that there exists a PPT $\adv_g$ against $g^f_{\text{app-ones}}$ such that $\prob{1={\mathsf{Exp}}_{g^f_{\text{app-ones}},\adv_g}^{\mathsf{OW}}(1^\lambda)}$ is non-negligible.
+We now need to prove the analogous claim to Claim~\ref{claim:owfsimple}, namely:
+\begin{claim}\label{claim:owfsimple1}
+For each PPT adversary $\adv_g$ against the one-wayness of $g^f_{\text{app-ones}}$, there exists a PPT adversary $\adv^f_{\text{app-ones}}$ against the one-wayness of $f$ such that the following equation holds.
+\begin{equation}\label{eq:reductionowfones}
+\prob{1={\mathsf{Exp}}_{f,\adv^f_{\text{app-ones}}}^{\mathsf{OW}}(1^\lambda)}=\prob{1={\mathsf{Exp}}_{g^f_{\text{app-ones}},\adv_g}^{\mathsf{OW}}(1^\lambda)}
+\end{equation}
+\end{claim}
+Once we prove Claim~\ref{claim:owfsimple1}, we can conclude the existence of a PPT adversary against $f$ with non-negligible inverting probability and thus reach a contradiction. The proof of Claim~\ref{claim:owfsimple1} is analogous to the proof of Claim~\ref{claim:owfsimple}, just replace zeroes by ones at all positions. Let us include it here for completeness:
+\begin{center}
+\begin{pchstack}
+	  \procedure{${\mathsf{Exp}}_{f,\adv^f_{\text{app-ones}}}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		y\gets f(x)\\
+		x'\sample\adv^f_{\text{app-ones}}(1^\lambda,y)\\
+		\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif f(x')=y:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+		    \pchspace
+	  \procedure{${\mathsf{Exp}}_{f,\adv^f_{\text{app-ones}}}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		y\gets f(x)\\
+		\gamechange{$y'\gets y||1^\lambda$}\\		
+		\gamechange{$x'\sample\adv_g(1^\lambda,y')$}\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif f(x')=\gamechange{$f(x)$}:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+		\pchspace
+			  \procedure{${\mathsf{Exp}}_{g^f_{\text{app-ones}},\adv_g}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		\gamechange{$y\gets f(x)||1^{\abs{x}}$}\\
+		\\
+		x'\sample\adv_g(1^\lambda,y)\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif \gamechange{$f(x')||1^{\abs{x'}}=f(x)||1^{\abs{x}}$}:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+				\pchspace
+			  \procedure{${\mathsf{Exp}}_{g^f_{\text{app-ones}},\adv_g}^{\mathsf{OW}}(1^\lambda)$}{
+		x\sample\bin^\lambda\\
+		y\gets g^f_{\text{app-ones}}(x)\\
+		\\
+		x'\sample\adv_g(1^\lambda,y)\\
+		\pcassert \abs{x'}=\lambda\\
+		\pcif g^f_{\text{app-ones}}(x')=y:\\
+		\pcind \pcreturn 1\\
+		\pcreturn 0}
+\end{pchstack}
+\end{center}
+
+The right-most experiment (column 4) describes ${\mathsf{Exp}}_{g^f_{\text{app-zer}},\adv_g}^{\mathsf{OW}}(1^\lambda)$.
+From column 4 to column 3, we inlined the code of $g^f_{\text{app-zer}}(x)$ twice and we replaced $y$ by its value. Now, the proof concludes by observing that column 2 and column 3 essentially contain the same code. We only need to observe the following: Checking $f(x')=f(x)$ (column 2) is the same as performing the same checks with $\lambda$ zeroes appended to it---note that at this point, both, $\abs{x}$ and  $\abs{x'}$ are equal to $\lambda$. In column 3, if we additionally rename variable $y$ to $y'$, we yield the same code.

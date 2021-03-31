@@ -1,0 +1,102 @@
+\newpage
+\subsection{Signature schemes (SIG)}
+Signature schemes are used for protect the authenticity and integrity of messages and are the \emph{public-key} analogue of message authentication codes (MACs). Namely, while MACs can only be verified when knowing the secret MAC key, signatures can be verified when knowing the \emph{public} verification key. I.e., a signature scheme relies on a \emph{key pair}.
+
+\begin{syntax}[Signature scheme]
+    A \emph{signature} scheme $\s$ consists of three probabilistic polynomial-time (PPT) algorithms
+    \begin{align*} 
+      (\pk,\sk)\sample&\s.\kgen(1^\lambda) \\
+      \sigma\sample&\s.\sig(\sk,x) \\
+      \bin \sample &\s.\ver(\pk,x,\sigma)
+    \end{align*}
+    which have to satisfy the correctness criterion that $\forall x\in\bin^*:$
+      \[\probsub{(\pk,\sk)\sample\s.\kgen(1^\lambda),\sigma\sample\s.sig(\sk,x)}{\s.\ver(\pk,x,\sigma)=1}=1.\]
+    i.e. when generating a key pair $(\pk,\sk)\sample\s.\kgen(1^\lambda)$ and signing $\sigma\sample\sig(\sk,x)$ for some message $x$, then $\ver(\pk,x,\sigma)=1$.
+\end{syntax}
+
+\begin{security}[UNF-CMA for Signatures]\label{def:UNF-CMA-sig}
+Let the  games $\M{Gpunf\text{-}cma}^0_\s$ and $\M{Gpunf\text{-}cma}^1_\s$ be defined as
+\begin{codebox}
+\begin{center}
+  \begin{pchstack}
+      \pchspace
+        \begin{pcvstack}
+          \underline{\underline{$\M{Gpunf\text{-}cma}_\s^0$}}\\
+                          \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+			  \s\text{:} \< \quad \text{signature scheme} 
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+																	\pk\text{:} \<\quad \text{public key}\\
+																	\sk\text{:} \<\quad \text{secret key}\\
+			              }
+          \pcvspace
+    \procedure{$\O{GETPK}()$}{
+		    \pcif \pk=\bot:\\
+				\pcind  (\pk,\sk)\sample\s.\kgen(1^\lambda)\\
+      \pcreturn \pk}
+										\pcvspace
+    \procedure{$\O{SIG}(x)$}{
+		  \pcif \pk=\bot:\\
+			\pcind (\pk,\sk)\sample\s.\kgen(1^\lambda)\\
+      \sigma\sample \s.\sig(\sk,x)\\
+      \\
+      \pcreturn \sigma}
+   \pcvspace
+		\procedure{$\O{VERIFY}(x,\sigma)$}{
+		    \pcif \pk=\bot:\\
+				\pcind  (\pk,\sk)\sample\s.\kgen(1^\lambda)\\
+      d\gets \m.\ver(\pk,x,\sigma)\\
+      \pcreturn d}
+  \end{pcvstack}
+              \pchspace
+  \begin{pcvstack}
+          \underline{\underline{$\M{Gpunf\text{-}cma}_\s^1$}}\\
+                                \\
+              \procedure{Package Parameters}{
+				\lambda\text{:} \< \quad \text{security parameter}\\
+			  \s\text{:} \< \quad \text{signature scheme} 
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+																	\pk\text{:} \<\quad \text{public key}\\
+																	\sk\text{:} \<\quad \text{secret key}\\
+ 				                  \mathcal{L}\text{:} \<\quad \text{list} 
+			              }
+          \pcvspace
+    \procedure{$\O{GETPK}()$}{
+		    \pcif \pk=\bot:\\
+				\pcind  (\pk,\sk)\sample\s.\kgen(1^\lambda)\\
+      \pcreturn \pk}
+          \pcvspace
+    \procedure{$\O{SIG}(x)$}{
+		    \pcif \pk=\bot:\\
+				\pcind  (\pk,\sk)\sample\s.\kgen(1^\lambda)\\
+      \sigma\sample \s.\sig(\sk,x)\\
+      \mathcal{L}\gets\mathcal{L}\cup\{(x,\sigma)\}\\
+      \pcreturn \sigma}
+          \pcvspace
+    \procedure{$\O{VERIFY}(x,\sigma)$}{
+          \pcif (x,\sigma)\in\mathcal{L}:\\
+          \pcind \pcreturn 1\\
+          \\
+          \pcreturn 0}
+  \end{pcvstack}
+  \end{pchstack}
+  \end{center}
+\end{codebox}
+\vspace{5mm}
+
+A signature scheme $\s$ is UNF-CMA-secure if the real game $\M{Gpunf\text{-}cma}^0_\s$ and the ideal game $\M{Gpunf\text{-}cma}^1_\s$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
+\begin{align*}
+&\mathbf{Adv}_{\adv}^{
+  \M{Gpunf\text{-}cma}^0_\s,
+  \M{Gpunf\text{-}cma}^1_\s}
+	(\lambda) \\
+:=&\abs{\prob{1=\adv\circ \M{Gpunf\text{-}cma}^0_\s}-\prob{1=\adv\circ \M{Gpunf\text{-}cma}^1_\s}}
+\end{align*}
+is negligible in $\lambda$.
+\end{security}
+

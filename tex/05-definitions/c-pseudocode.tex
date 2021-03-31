@@ -1,0 +1,69 @@
+\subsection{Pseudocode}\label{ssec:pseudocode-defs}
+To talk about cryptography, we have to talk about algorithms. We have to talk about specific cryptographic algorithms, and possible attacks on them. Section \ref{section:foundations} discussed the details of how we model security (Section \ref{ssec:security-foundations}), and algorithms (Section~\ref{ssec:model-of-computation}). This section focuses on the notation necessary to talk precisely about computation and algorithms.
+
+Functions, algorithms and oracles all can take inputs and produce outputs. However, there are differences between these concepts. This and the next section will go on to define all of these concepts in detail. Table \ref{table:functions-algorithms-oracles} provides a quick overview of the differences.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l|p{11cm}}
+  Term & Meaning \\ \hline
+  Function & Mapping from inputs to outputs. Stateless, always deterministic. Name written in \emph{italics}.\\
+  Algorithm & Process that produces an output, possibly given an input. Stateless, possibly randomized. Name written in \O{lowercase}.\\
+  Game & A collection of algorithms that can be called as oracles. Stateful. Name written \M{Capitalized}. \\
+  Oracle & An interface for an algorithm within a package. Stateful (through the state of the package), possibly randomized. Name written in \O{UPPERCASE}.\\
+\end{tabular}
+\end{center}
+\caption{Differences between functions, algorithms and oracles}\label{table:functions-algorithms-oracles}
+\end{table}
+
+\subsubsection{Algorithms}
+
+Algorithms are used in this course for communicating ideas about cryptography, and proving things within cryptography. To do these two things, we don't need to be exact about computational details of how the algorithms operate. That's why we define algorithms in \emph{pseudocode}\footnote{There is a more detailed argument for this choice in Section \ref{ssec:model-of-computation}}. Writing pseudocode should be easy, and we don't have rigid prescriptions for how we expect course participants to write pseudocode (and in the academic field of cryptography, there are not such rigid prescriptions either). The way that the algorithm $\O{randomxor}$ is defined in Figure \ref{example-pseudocode} shows how algorithms are defined in the course materials. It's a good template, but you can deviate from it as long as you make sure that your version is clear and you explain any new non-obvious notation. The names of algorithms will always be written in \O{lowercase}.
+
+\begin{figure}
+\begin{center}
+\procedure{$\O{randomxor}(k)$}{
+    \pcassert k \neq \bot \\
+    i \sample \bin^3 \\
+    r \gets k \oplus i \\
+    \pcreturn r}
+\end{center}
+\caption{Defining $\O{randomxor}$ in pseudocode}\label{example-pseudocode}
+\end{figure}
+
+
+Table \ref{table:pseudocode-notation} lists the operations we use in pseudocode without further explanation in addition to the mathematical operations provided in Table~\ref{table:math}. We now comment on the concepts \emph{for loops}, \emph{asserts} and \emph{initialization}:
+\begin{itemize}
+\item If a statement that evaluates to false is given as input to $\mathbf{assert}$, and error value is returned. Jumping ahead, when the oracle of a game evaluates such an $\mathbf{assert}$, then the game goes to an error state from which it is impossible to recover. A game in an error state no longer responds to any oracle calls.\footnote{The exact mechanisms of this error handling are not defined, since they are unimportant for the topic of cryptography.}
+\item If $S$ is a table, iteration is in the order given by indices. Sets are ordered by the lexicographic order of the binary representation of their elements, sets of natural numbers are ordered as usual. You can use other notation, e.g. $\pcfor \{i, 0\leq i<10, i\texttt{++}\}$, to explicitly specify order, in this case, iterating over all integers from $0$ to $9$.
+\item  In our pseudocode, we assume variables are initialized in a certain way. Variables aren't declared: before the value of a variable is set with the ``$\gets$'' operation, it has the special value $\bot$. For a list, the value at any entry is $\bot$ before it is specifically set. Sets are initialized to the empty set.
+\end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c | l}
+    Symbol & Meaning \\ \hline
+    $k \gets x$ & The value of the variable $k$ is set to $x$ \\
+    $k \sample S$ & The value of variable $k$ is set to a uniformly random element of $S$ \\
+    $k = x$ & True if $k$ is equal to $x$ \\
+    $k \neq x$ & True if $k$ is not equal to $x$ \\
+    $T[x]$ & The element at index $x$ of table $T$ \\
+    $\pcreturn x$ & Terminate the program and return $x$ \\
+    $\pcif x:$ \{code block\} & Run the following indented code block if $x$ is true\\
+    $\pcif z=\bot:$ \{code block\} & Run the following indented code block if $z$ has not been assigned yet\\
+    $\pcfor x \in S:$ \{code block\} & For loop that iterates through the values in $S$\\
+    $\pcassert x$ & Assert that $x$ is true, terminate program on failure\\
+\end{tabular}
+\end{center}
+\caption{Pseudocode notation}\label{table:pseudocode-notation}
+\end{table}
+
+As discussed in Section~\ref{ssec:model-of-computation} we want to ensure that all algorithms terminate. Therefore, you cannot use while-loops or goto statements in your pseudocode.
+
+
+\subsubsection{Randomized computation}\label{sssec:randomized-algorithms}
+Our algorithms can be randomized due to the $\sample$ operator. We need a way of expressing the probability that such a randomized algorithm provides a certain output. We can always view a randomized algorithm $\alg(.)$ as a deterministic one $\alg'(.;.)$, which takes an extra input that models the randomness the algorithm uses. Then a probability statement about the algorithm would look like this:
+\[\probsub{x\sample \bin^n,r\sample\bin^\ell}{\alg'(x;r)=1},\]
+with $\ell$ being the amount of randomness needed by $\alg$. This is often cumbersome notation, so we will have probability statements where we leave the randomness of a randomized algorithm \emph{implicit}, i.e., if $\alg$ is a randomized algorithm, we write
+\[\probsub{x\sample \bin^n}{\alg(x)=1}:=
+\probsub{x\sample \bin^n,r\sample\bin^\ell}{\alg'(x;r)=1},\]

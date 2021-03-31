@@ -1,0 +1,165 @@
+\newpage
+\subsection{Public key encryption (PKE)}
+A public-key encryption scheme is used to protect the confidentiality of messages. It is the public-key analogue to a symmetric-key encryption scheme. Namely, \emph{encryption} is a public operation which uses the public-key whereas \emph{decryption} is only possible for the receiver in possession of the secret key.
+\begin{syntax}[Public key encryption (PKE)]
+	A public-key encryption scheme $\pke$ consists of three probabilistic polynomial-time (PPT) algorithms
+	\begin{align*}
+		(\pk, \sk) \sample &\pke.\kgen(1^\lambda)\\
+		c \sample &\pke.\enc(\pk,x)\\
+		y \gets &\pke.\dec(\sk,c) \\
+	\end{align*}
+	which have to satisfy the correctness criterion that for all $x\in\bin^*$, it holds that
+		\[\probsub{(\pk,\sk)\sample\pke.\kgen(1^\lambda),c\sample\pke.\enc(\pk,x)}{\pke.\dec(\sk,c)=x}=1.\]
+	i.e. given a key pair $(\pk,\sk)\sample\pke.\kgen(1^\lambda)$, a ciphertext $c\sample\pke.\enc(\pk,x)$ decrypts to message $x$ again.
+\end{syntax}
+
+\begin{security}[IND-CPA]
+Let the games $\M{Gpind\text{-}cpa}^0_\pke$ and $\M{Gpind\text{-}cpa}^1_\pke$ be defined as
+\begin{codebox}
+\begin{center}
+	\begin{pchstack}
+	  \begin{pcvstack}
+				\underline{\underline{$\M{Gpind\text{-}cpa}^0_\pke$}}\\
+              \procedure{Parameters}{
+				\lambda\text{:} \< \quad \text{sec. par.}\\
+			  \pke\text{:} \< \quad \text{PKE}
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				\pk{:} \< \quad \text{public key}\\
+			  \sk\text{:} \< \quad \text{secret key}
+			              }
+          \pcvspace
+    \procedure{$\O{GETPK}()$}{
+		    \pcif \pk=\bot:\\
+				\pcind  (\pk,\sk)\sample\pke.\kgen(1^\lambda)\\
+      \pcreturn \pk}
+										\pcvspace
+		  \procedure{$\O{ENC}(x)$}{
+			  \pcif \pk=\bot:\\
+				\pcind (\pk,\sk)\sample \pke.\kgen(1^\lambda)\\
+				\\
+			 c\sample \pke.\enc(\pk,x)\\
+			\pcreturn c}
+		\end{pcvstack}
+			 \pchspace
+	  \begin{pcvstack}
+				\underline{\underline{$\M{Gpind\text{-}cpa}^1_\pke$}}\\
+              \procedure{Parameters}{
+				\lambda\text{:} \< \quad \text{sec. par.}\\
+			  \pke\text{:} \< \quad \text{PKE}
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				\pk{:} \< \quad \text{public key}\\
+			  \sk\text{:} \< \quad \text{secret key}
+			              }
+          \pcvspace
+    \procedure{$\O{GETPK}()$}{
+		    \pcif \pk=\bot:\\
+				\pcind  (\pk,\sk)\sample\pke.\kgen(1^\lambda)\\
+      \pcreturn \pk}
+										\pcvspace
+		  \procedure{$\O{ENC}(x)$}{
+			  \pcif \pk=\bot:\\
+				\pcind (\pk,\sk)\sample \pke.\kgen(1^\lambda)\\
+				x'\gets 0^{\abs{x}}\\
+			 c\sample \pke.\enc(\pk,x')\\
+			\pcreturn c}
+		\end{pcvstack}
+	\end{pchstack}
+\end{center}
+\end{codebox}
+\vspace{5mm}
+ A PKE $\pke$ is IND-CPA secure if $\M{Gpind\text{-}cpa}^0_\pke$ and $\M{Gpind\text{-}cpa}^1_\pke$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
+\begin{align*}
+&\mathbf{Adv}_{\adv}^{
+	\M{Gpind\text{-}cpa}^0_\pke
+	,\M{Gpind\text{-}cpa}^1_\pke}
+	(\lambda)\\
+:=&\abs{\prob{1=\adv\circ \M{Gpind\text{-}cpa}^0_\pke}-\prob{1=\adv\circ \M{Gpind\text{-}cpa}^1_\pke}}
+\end{align*}
+is negligible in $\lambda$.
+\end{security}
+
+
+
+\begin{security}[IND-CCA]
+\begin{codebox}
+\begin{center}
+	\begin{pchstack}
+	  \begin{pcvstack}
+				\underline{\underline{$\M{Gpind\text{-}cca}^0_\pke$}}\\
+              \procedure{Parameters}{
+				\lambda\text{:} \< \quad \text{sec. par.}\\
+			  \pke\text{:} \< \quad \text{PKE}
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				\pk\text{:} \< \quad \text{public-key}\\
+			  \sk\text{:} \< \quad \text{secret-key} \\
+			              }
+										\pcvspace
+		  \procedure{$\O{ENC}(x)$}{
+			\pcif \pk=\bot:\\
+			\pcind (\pk,\sk)\gets\pke.\kgen(1^\lambda)\\
+			\\
+			 c\sample \pke.\enc(\pk,x)\\
+			\\
+			\pcreturn c}
+										\pcvspace
+		  \procedure{$\O{DEC}(c)$}{
+			\pcif \pk=\bot:\\
+			\pcind (\pk,\sk)\gets\pke.\kgen(1^\lambda)\\
+			  x\gets\pke.\dec(\sk,c)\\
+				\\
+				\\
+			\pcreturn x}
+		\end{pcvstack}
+			 \pchspace
+	  \begin{pcvstack}
+				\underline{\underline{$\M{Gpind\text{-}cca}^1_\pke$}}\\
+              \procedure{Parameters}{
+				\lambda\text{:} \< \quad \text{sec. par.}\\
+			  \pke\text{:} \< \quad \text{PKE}
+			              }
+										\pcvspace
+										              \procedure{Package State}{
+				\pk\text{:} \< \quad \text{public-key}\\
+			  \sk\text{:} \< \quad \text{secret-key}\\
+				T\text{:} \< \quad \text{table}
+			              }
+										\pcvspace
+		  \procedure{$\O{ENC}(x)$}{
+			\pcif \pk=\bot:\\
+			\pcind (\pk,\sk)\gets\pke.\kgen(1^\lambda)\\
+				x'\gets 0^{\abs{x}}\\
+ 			 c\sample \pke.\enc(\pk,x')\\
+			T[c]\gets x\\
+			\pcreturn c}
+			\pcvspace
+		  \procedure{$\O{DEC}(c)$}{
+			\pcif \pk=\bot:\\
+			\pcind (\pk,\sk)\gets\pke.\kgen(1^\lambda)\\
+      x\gets\pke.\dec(\sk,c)\\
+			\pcif T[c]\neq\bot\\
+			\pcind x\gets T[c]\\
+			\pcreturn x}
+		\end{pcvstack}
+	\end{pchstack}
+\end{center}
+\end{codebox}
+\vspace{5mm}
+ A PKE $\pke$ is IND-CCA secure if $\M{Gpind\text{-}cca}^0_\pke$ and $\M{Gpind\text{-}cca}^1_\pke$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
+ \[\mathbf{Adv}_{\adv}^{
+	\M{Gpind\text{-}cca}^0_\pke
+	 ,\M{Gpind\text{-}cca}^1_\pke}
+	 (\lambda) \]
+ is negligible in $\lambda$, where the games $\M{Gpind\text{-}cca}^0_\pke$, $\M{Gpind\text{-}cca}^1_\pke$ are defined above.
+\end{security}
+
+
+
+\begin{remark}
+    Note that the ideal decryption oracle for IND-CCA-security is different from the ideal decryption oracle for AE-security in the symmetric-encryption case. This is because, given the public-key, the adversary can create valid ciphertexts. Thus, IND-CCA-security only models confidentiality (in the presence of chosen ciphertext attacks), but not integrity, unlike AE which captures both at once, integrity and confidentiality under chosen ciphertext attacks.
+\end{remark}

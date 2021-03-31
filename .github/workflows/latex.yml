@@ -1,0 +1,30 @@
+name: Build LaTeX and publish
+on: [push, pull_request]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+
+      # Handle deployment, if this is the main branch
+      - name: Assemble the gh-pages deployment
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          mkdir gh-pages-deployment
+          cp main.pdf gh-pages-deployment/CryptoProofCompanion.pdf
+          echo '<a href="CryptoCompanion.pdf">See the PDF</a>' > gh-pages-deployment/index.html
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages-deployment/
+          # force_orphan: true  # this would remove gh-pages history

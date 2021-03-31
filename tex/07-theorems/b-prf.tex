@@ -1,0 +1,32 @@
+\subsection{Theorems on generic PRF transformations}
+\begin{theorem}[Negligible modification]\label{thm:PRF-negl-mod}
+If $f$ is a secure $(\pcvar{in},\lambda)$-PRF, if $f_{\text{bad}}$ is a function which satisfies the 
+syntax of a $(\pcvar{in},\lambda)$-PRF
+(but not necessarily the security) and if $P:\bin^*\rightarrow\bin$ is a polynomial-time computable predicate (i.e. boolean valued function) with
+\[\probsub{k\sample\bin^\lambda}{P(k)=1}\]
+being negligible in $\lambda$, then the function $f_{\text{tweak}}$ is a secure PRF:
+\begin{center}
+\begin{pchstack}
+\procedure{$f_\text{tweak}(k,x)$}{
+\pcif P(k)=0:\\
+\pcind y\gets f(k,x)\\
+\pcif P(k)=1:\\
+\pcind y\gets f_{\text{bad}}(k,x)\\
+\pcreturn y}
+\end{pchstack}
+\end{center}
+\end{theorem}
+
+\begin{theorem}[Hard-to-invert-PRF]
+Let $f_{\text{prp}}$ be a secure $(\lambda,\lambda)$-PRP, and let $f_{\text{owp}}$ be a bijective length-preserving
+one-way function (sometimes also called a one-way permutation whence the subscript $\text{owp}$.
+Then the function $f$ is a secure $(\lambda,\lambda)$-PRF:
+\begin{center}
+\begin{pchstack}
+\procedure{$f(k,x)$}{
+x'\gets f_{\text{owp}}(x)\\
+y\gets f_{\text{prp}}(x')\\
+\pcreturn y}
+\end{pchstack}
+\end{center}
+\end{theorem}
