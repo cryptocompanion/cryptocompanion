@@ -1,5 +1,7 @@
-name: Build LaTeX and publish
+name: Build LaTeX and deploy
+
 on: [push, pull_request]
+
 jobs:
   build_latex:
     runs-on: ubuntu-latest
@@ -11,15 +13,25 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
-
-      # Handle deployment, if this is the main branch
+      - name: Save pdf as articaft
+        uses: actions/upload-artifact@v2
+        with:
+          name: compiled-book
+          path: main.pdf
+  deploy:
+    needs: build_latex
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Download pdf
+        uses: actions/download-artifact@v2
+        with:
+        - name: compiled-book
       - name: Assemble the gh-pages deployment
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
           mkdir gh-pages-deployment
           cp main.pdf gh-pages-deployment/cryptocompanion.pdf
           echo '<a href="cryptocompanion.pdf">See the PDF</a>' > gh-pages-deployment/index.html
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
@@ -28,3 +40,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: gh-pages-deployment/
           # force_orphan: true  # this would remove gh-pages history
+ 
