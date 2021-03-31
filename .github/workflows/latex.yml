@@ -19,6 +19,7 @@ jobs:
           mkdir gh-pages-deployment
           cp main.pdf gh-pages-deployment/cryptocompanion.pdf
           echo '<a href="cryptocompanion.pdf">See the PDF</a>' > gh-pages-deployment/index.html
+          echo 'testi' > gh-pages-deployment/cryptocompanion.txt
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
