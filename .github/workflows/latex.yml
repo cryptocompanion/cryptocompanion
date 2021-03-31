@@ -18,6 +18,35 @@ jobs:
         with:
           name: compiled-book
           path: main.pdf
+      - name: Save log as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: latex-log
+          path: main.log
+  latex_warnings:
+    needs: build_latex
+    runs-on: ubuntu-latest
+      steps:
+        - name: Download log
+          uses: actions/download-artifact@v2
+          with:
+            name: latex-log
+        - run: |
+            grep -i warning main.log > warnings.log
+            num_warnings=`wc -l warnings.log`
+            return num_warnings
+  latex_overfull_boxes:
+    needs: build_latex
+    runs-on: ubuntu-latest
+      steps:
+        - name: Download log
+          uses: actions/download-artifact@v2
+          with:
+            name: latex-log
+      - run: |
+            grep -i overfull main.log > warnings.log
+            num_overfull=`wc -l warnings.log`
+            return num_overfull
   deploy:
     needs: build_latex
     runs-on: ubuntu-latest
@@ -40,4 +69,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: gh-pages-deployment/
           # force_orphan: true  # this would remove gh-pages history
- 
