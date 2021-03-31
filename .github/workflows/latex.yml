@@ -34,7 +34,7 @@ jobs:
       - name: Check the number of latex warnings
         run: |
           grep -i warning main.log > warnings.log
-          num_warnings=`wc -l warnings.log`
+          num_warnings=`wc -l warnings.log | awk '{print $1;}'`
           return num_warnings
   latex_overfull_boxes:
     needs: build_latex
@@ -47,7 +47,7 @@ jobs:
       - name: Check the number of overfull boxes
         run: |
           grep -i overfull main.log > warnings.log
-          num_overfull=`wc -l warnings.log`
+          num_overfull=`wc -l warnings.log | awk '{print $1;}'`
           return num_overfull
   deploy:
     needs: build_latex
