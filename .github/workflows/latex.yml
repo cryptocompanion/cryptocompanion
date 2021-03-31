@@ -17,8 +17,8 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         run: |
           mkdir gh-pages-deployment
-          cp main.pdf gh-pages-deployment/CryptoCompanion.pdf
-          echo '<a href="CryptoCompanion.pdf">See the PDF</a>' > gh-pages-deployment/index.html
+          cp main.pdf gh-pages-deployment/cryptocompanion.pdf
+          echo '<a href="cryptocompanion.pdf">See the PDF</a>' > gh-pages-deployment/index.html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
