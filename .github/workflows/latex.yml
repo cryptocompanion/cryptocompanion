@@ -23,32 +23,6 @@ jobs:
         with:
           name: latex-log
           path: main.log
-  latex_warnings:
-    needs: build_latex
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download log
-        uses: actions/download-artifact@v2
-        with:
-          name: latex-log
-      - name: Check the number of latex warnings
-        run: |
-          grep -i warning main.log > warnings.log
-          num_warnings=`wc -l warnings.log | awk '{print $1;}'`
-          exit $num_warnings
-  latex_overfull_boxes:
-    needs: build_latex
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download log
-        uses: actions/download-artifact@v2
-        with:
-          name: latex-log
-      - name: Check the number of overfull boxes
-        run: |
-          grep -i overfull main.log > warnings.log
-          num_overfull=`wc -l warnings.log | awk '{print $1;}'`
-          exit $num_overfull
   deploy:
     needs: build_latex
     runs-on: ubuntu-latest
