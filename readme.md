@@ -1,6 +1,6 @@
-![latex workflow](https://github.com/vlipiainen/cryptoproofcompanion/actions/workflows/latex.yml/badge.svg)
+![latex workflow](https://github.com/cryptocompanion/cryptocompanion/actions/workflows/latex.yml/badge.svg)
 
-# Companion to Cryptographic Primitives, Protocols and Proofs ([pdf](https://vlipiainen.github.io/cryptoproofcompanion/CryptoCompanion.pdf))
+# Companion to Cryptographic Primitives, Protocols and Proofs ([pdf](https://cryptocompanion.github.io/cryptocompanion/CryptoCompanion.pdf))
 This is the github repository for the book "Companion to Cryptographic Primitives, Protocols and Proofs" written by Chris Brzuska and Valtteri Lipiäinen. The book aims to provide an introduction to cryptography, with a focus on formal proving using the state-separating proofs (SSP) framework.
 ## State of the project
 The project is not meant to be complete yet: there will likely be major changes and additions in the future. Any feedback is welcome.
