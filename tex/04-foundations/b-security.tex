@@ -1,9 +1,9 @@
 \subsection{Security}\label{ssec:security-foundations}
 The concepts of a cryptographic system and an adversary are foundational to capturing security of cryptography. We already referred to adversaries and cryptographic systems in the statement at the very beginning of this section. So, now, let us start our discussion of security by elaborating on what we mean by the \emph{adversary} concept and by the concept of a \emph{cryptographic system}.
 
-Cryptography studies the security of systems, functionalities and communication from adversarial interference. It is helpful to think of such situations as dividing agents into two groups: the system with its users, and the adversary. The system has some functionality that its users want to use. This functionality includes correctness (e.g., an encrypted messaging application shall transmit messages to the intended recipient), but it also includes some intuition of what it would mean to break the security of that functionality (e.g., unwanted access to the messages by third parties). It would be impossible to study the security of such a system without also considering the agent that tries to break the security. We call this agent the adversary. 
+Cryptography studies the security of systems, functionalities and communication from adversarial interference. It is helpful to think of such situations as dividing agents into two groups: the system with its users, and the adversary. The system has some functionality that its users want to use. This functionality includes correctness (e.g., an encrypted messaging application shall transmit messages to the intended recipient), but it also includes some intuition of what it would mean to break the security of that functionality (e.g., unwanted access to the messages by third parties). It would be impossible to study the security of such a system without also considering the agent that tries to break the security. We call this agent the adversary.
 \begin{quote}
-Cryptography studies the interplay between the system and the adversary.
+    Cryptography studies the interplay between the system and the adversary.
 \end{quote}
 
 
@@ -11,29 +11,29 @@ So far, our concepts have been rather general, since there are countless differe
 
 \paragraph{Security Definitions} What is a good security definition? We can define any number of different security notions. Therefore, when putting forward a new security notion, we should explain why it is useful, why it captures what we aim for and how it differs from ones that have been defined before (if any). A good security definition (1) has a clear conceptual motivation, (2) has a clear description, (3) comes with a discussion of necessary, arbitrary and convenient choices as well as (4) a discussion of advantages/disadvantages compared to other definitions.
 
-Security definitions are necessarily intertwined with a notion of an adversary. To clearly understand security notions, we also have to have a clear understanding of the adversary. The adversary is the agent that tries to break the security of a system. There are two things that go into breaking the security of a system: access to the system and what is done with that access. We model the \emph{adversary} as an algorithm that gets some inputs from the system and returns something. We call the inputs that the adversary gets the \emph{adversarial capabilities}. 
+Security definitions are necessarily intertwined with a notion of an adversary. To clearly understand security notions, we also have to have a clear understanding of the adversary. The adversary is the agent that tries to break the security of a system. There are two things that go into breaking the security of a system: access to the system and what is done with that access. We model the \emph{adversary} as an algorithm that gets some inputs from the system and returns something. We call the inputs that the adversary gets the \emph{adversarial capabilities}.
 It depends on the situation being studied which capabilities the adversary has, and the capabilities have to be specified when defining a security notion. It is very common for the adversary to have the capability to read any messages sent over the network or even to entirely control the network traffic. There are also more specialized capabilities that an adversary might have, including being able to choose which messages a client sends (partial knowledge and/or control over the message content as, e.g., in the case of cookie-forwarding) or getting to see the outputs of a function for chosen inputs.
 
 \begin{quote}
-How should we choose the adversarial capabilities?
+    How should we choose the adversarial capabilities?
 \end{quote}
 
 An important insight (on which we elaborate below) is that we do not know what the exact capabilities of a real-life adversary are.
-Cryptography has to protect against attacks that even the designer of the system has not thought of. 
-Therefore, in our specifications of adversarial capabilities, we will typically \emph{over-approximate} a bit. 
+Cryptography has to protect against attacks that even the designer of the system has not thought of.
+Therefore, in our specifications of adversarial capabilities, we will typically \emph{over-approximate} a bit.
 For example, we say that a network adversary can drop, re-order, delay, re-route and replace all network messages.
-In a real-life attack scenario, an adversary can typically only perform such actions partially. 
-For example, the adversary might have only access to part of the network and might only be able to inject message but not be able to block all other messages. 
-Unfortunately, capturing the \emph{exact} attack capabilities of various network adversaries might 
-be impossible. 
-So, if we manage to specify a \emph{bigger} set of adversarial capabilities that comprises all network attacks that might be carried out, then we can consider such a set of adversarial capabilities as \emph{sufficiently strong}. 
+In a real-life attack scenario, an adversary can typically only perform such actions partially.
+For example, the adversary might have only access to part of the network and might only be able to inject message but not be able to block all other messages.
+Unfortunately, capturing the \emph{exact} attack capabilities of various network adversaries might
+be impossible.
+So, if we manage to specify a \emph{bigger} set of adversarial capabilities that comprises all network attacks that might be carried out, then we can consider such a set of adversarial capabilities as \emph{sufficiently strong}.
 If we can show security against such a strong adversary, then, in particular, the protocols we build are secure also against weaker (realistic) adversaries which only have a subset of the capabilites. To summarize,
 \begin{quote}
-in a good model, the adversary's capabilities can be \emph{more} than in real-life, but \emph{should not be less}.
+    in a good model, the adversary's capabilities can be \emph{more} than in real-life, but \emph{should not be less}.
 \end{quote}
 This sentence is an excellent summary for decision-making for whether or not to include a certain capability into the model. I.e., it is always good to be on the side of allowing the adversary \emph{more} rather than less. However, this principle is a bit too simple on its own and needs to be complemented by a second principle. Consider, for example, the situation where a user is coerced into revealing its key to the adversary. In this case, the adversary can impersonate the user, send messages on their behalf and read all their communication. However, we might have a feeling that this is not actually an attack against the \emph{cryptographic system} itself, but rather an attack onto the circumstances in which the system is used. In any case, our cryptographic system cannot provide security in this situation and thus, we have to exclude this attack from the model. We call attacks against which \emph{no} cryptographic system can protect \emph{trivial attacks}, and the second principle for adversarial capabilites states that
 \begin{quote}
-in a good model, there are no trivial attacks.
+    in a good model, there are no trivial attacks.
 \end{quote}
 
 Similarly to being unable to estimate precisely the adversarial capabilities, we also do not know in advance what the adversary will do.
@@ -41,24 +41,24 @@ That's why we model the adversary as a general algorithm, without specifying wha
 However, cryptography can typically be broken if an adversary invests \emph{an infeasible amount of time}, for example by trying out all possible keys.
 
 \begin{quote}
-Our models provide security against arbitrary \emph{efficient} adversaries.
+    Our models provide security against arbitrary \emph{efficient} adversaries.
 \end{quote}
 Moreover, cryptography can typically be broken with some very small probability, e.g., if the adversary guesses the key correctly.
-So, when we say that \emph{a system is secure}, then this typically means that 
+So, when we say that \emph{a system is secure}, then this typically means that
 
 \begin{quote}
-\emph{all efficient
-adversaries} only have \emph{very small probability} in breaking the system. 
+    \emph{all efficient
+        adversaries} only have \emph{very small probability} in breaking the system.
 \end{quote}
-The terms \emph{efficient} and \emph{small} can be interpreted in different ways. 
+The terms \emph{efficient} and \emph{small} can be interpreted in different ways.
 The interpretation this course uses is discussed in Section \ref{section:definitions}.
 
 \paragraph{Proofs}
 In addition to defining notions of security, we want to prove things about the security of specific systems.
 Showing that an attack works against a system is typically easy: one executes the attack and thereby
-convinces the observer that the attack succeeds. 
-When we design secure systems, we want to do the opposite: we want to show that no attacks against the system exist. 
-This is tremendously difficult, since there is an \emph{infinity} of attack strategies. 
+convinces the observer that the attack succeeds.
+When we design secure systems, we want to do the opposite: we want to show that no attacks against the system exist.
+This is tremendously difficult, since there is an \emph{infinity} of attack strategies.
 How can we show that none of them work?
 Even if we are precise about the adversary's attack capabilities, there are still an infinity of
 strategies.
@@ -67,8 +67,8 @@ we show that \emph{none} of these approaches work?
 We would like to \emph{prove} that indeed, no such attack can succeed, and we show in this course
 how to prove such a statement.
 
-To be sure our proofs are correct, they need to be rigorous. 
-To write rigorous proofs, we need precise, technical definitions of the things we study. 
+To be sure our proofs are correct, they need to be rigorous.
+To write rigorous proofs, we need precise, technical definitions of the things we study.
 So far, we have focused on describing our modeling choices, rather than technical accuracy.
 Section \ref{section:definitions} will go over the technical details involved in writing security definitions, and Section \ref{section:primitives} will get to the work of actually writing security definitions.
 To understand those technical details, it is useful to understand some of the conceptual steps we take to bridge the gap between the general remarks above and formal security definitions.
