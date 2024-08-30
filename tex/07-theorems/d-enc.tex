@@ -4,117 +4,117 @@ We describe how to build secure symmetric encryption schemes. We start with IND-
 and then turn to AE-security. Since PRFs and PRPs tend to operate on blocks, we will often
 need an \emph{encoding} scheme which encodes messages into a multiple of the block length.
 \begin{definition}[Encoding scheme]
-We call two functions $\O{encode}_\lambda:\bin^*\rightarrow\bin^*$ and $\O{decode}_\lambda:\bin^*\rightarrow\bin^*$
-an \emph{encoding scheme} if
-\begin{itemize}
-\item $\O{encode}_\lambda$ and $\O{decode}_\lambda$ are computable in polynomial time polynomial in $\lambda$ and the length of the input.
-\item $\O{decode}_\lambda$ is the inverse of $\O{encode}_\lambda$, i.e., for all $x\in\bin^*$, we have
-      $\O{decode}_\lambda(\O{encode}_\lambda(x))=x$. In particular, $\O{encode}_\lambda$ is \emph{injective}, i.e., if $x\neq x'$, then $\O{encode}_\lambda(x)\neq\O{encode}_\lambda(x')$.
-\item the length $\O{encode}_\lambda$ only depends on the length of the input, i.e., if $\abs{x}=\abs{x'}$, then 
-$\abs{\O{encode}_\lambda(x)}=\abs{\O{encode}_\lambda(x')}$.
-\item for all $x\in\bin^*$, $\abs{\O{encode}_\lambda(x)}$ is divisible by $\lambda$.
-\end{itemize}
+  We call two functions $\O{encode}_\lambda:\bin^*\rightarrow\bin^*$ and $\O{decode}_\lambda:\bin^*\rightarrow\bin^*$
+  an \emph{encoding scheme} if
+  \begin{itemize}
+    \item $\O{encode}_\lambda$ and $\O{decode}_\lambda$ are computable in polynomial time polynomial in $\lambda$ and the length of the input.
+    \item $\O{decode}_\lambda$ is the inverse of $\O{encode}_\lambda$, i.e., for all $x\in\bin^*$, we have
+          $\O{decode}_\lambda(\O{encode}_\lambda(x))=x$. In particular, $\O{encode}_\lambda$ is \emph{injective}, i.e., if $x\neq x'$, then $\O{encode}_\lambda(x)\neq\O{encode}_\lambda(x')$.
+    \item the length $\O{encode}_\lambda$ only depends on the length of the input, i.e., if $\abs{x}=\abs{x'}$, then
+          $\abs{\O{encode}_\lambda(x)}=\abs{\O{encode}_\lambda(x')}$.
+    \item for all $x\in\bin^*$, $\abs{\O{encode}_\lambda(x)}$ is divisible by $\lambda$.
+  \end{itemize}
 \end{definition}
 
 \begin{theorem}[PRP in CBC is IND-CPA]
-Let $(\O{encode}_\lambda,\O{decode}_\lambda)$ be an encoding scheme and let $f$ be a secure $(\lambda,\lambda)$-secure pseudorandom permutation. Then, the
-following encryption scheme $\se_{\text{CBC-f}}$ is IND-CPA-secure.
-\begin{center}
-\begin{pchstack}
-\procedure{$\se_{\text{CBC-f}}.\O{enc}(k,m)$}{
-\lambda\gets\abs{k}\\
-m'\gets\O{encode}_{\lambda}(m)\\
-\pcvar{nonce}\sample\bin^\lambda\\
-\pcvar{c}^0\gets\pcvar{nonce}\\
-\ell\gets \frac{\abs{m'}}{\lambda}\\
-\pcfor i=1..\ell\\
-\pcind x^i\gets m'_{i\lambda..(i+1)\lambda-1}\\
-\pcind \pcvar{c}_i\gets f(k,x^i\oplus c^{i-1})\\
-c\gets (c_0,..,c_\ell)\\
-\pcreturn c}
-\pchspace
-\procedure{$\se_{\text{CBC-f}}.\O{dec}(k,c)$}{
-\lambda\gets\abs{k}\\
-\ell\gets \frac{\abs{c}}{\lambda}-1\\
-\text{Parse }c_0,..,c_\ell\gets c\\
-\pcfor i=1..\ell\\
-\pcind x^i\gets c^{i-1}\oplus f_{\text{inv}}(k,c^i)\\
-m'\gets x^1||..||x^\ell)\\
-m\gets \O{decode}_{\abs{k}}(m')\\
-\pcreturn m}
-\end{pchstack}
-\end{center}
+  Let $(\O{encode}_\lambda,\O{decode}_\lambda)$ be an encoding scheme and let $f$ be a secure $(\lambda,\lambda)$-secure pseudorandom permutation. Then, the
+  following encryption scheme $\se_{\text{CBC-f}}$ is IND-CPA-secure.
+  \begin{center}
+    \begin{pchstack}
+      \procedure{$\se_{\text{CBC-f}}.\O{enc}(k,m)$}{
+      \lambda\gets\abs{k}\\
+      m'\gets\O{encode}_{\lambda}(m)\\
+      \pcvar{nonce}\sample\bin^\lambda\\
+      \pcvar{c}^0\gets\pcvar{nonce}\\
+      \ell\gets \frac{\abs{m'}}{\lambda}\\
+      \pcfor i=1..\ell\\
+      \pcind x^i\gets m'_{i\lambda..(i+1)\lambda-1}\\
+      \pcind \pcvar{c}_i\gets f(k,x^i\oplus c^{i-1})\\
+      c\gets (c_0,..,c_\ell)\\
+      \pcreturn c}
+      \pchspace
+      \procedure{$\se_{\text{CBC-f}}.\O{dec}(k,c)$}{
+      \lambda\gets\abs{k}\\
+      \ell\gets \frac{\abs{c}}{\lambda}-1\\
+      \text{Parse }c_0,..,c_\ell\gets c\\
+      \pcfor i=1..\ell\\
+      \pcind x^i\gets c^{i-1}\oplus f_{\text{inv}}(k,c^i)\\
+      m'\gets x^1||..||x^\ell)\\
+      m\gets \O{decode}_{\abs{k}}(m')\\
+      \pcreturn m}
+    \end{pchstack}
+  \end{center}
 \end{theorem}
 
 \begin{theorem}[PRF in CTR is IND-CPA]
-Let $(\O{encode}_\lambda,\O{decode}_\lambda)$ be an encoding scheme and let $f$ be a secure $(\lambda,\lambda)$-secure pseudorandom function. Then, the encryption scheme $\se_{\text{CTR-f}}$ is IND-CPA-secure.
-\begin{center}
-\begin{pchstack}
-\procedure{$\se_{\text{CTR-f}}.\O{enc}(k,m)$}{
-\lambda\gets\abs{k}\\
-\pcvar{nonce}\sample\bin^\lambda\\
-m'\gets\O{encode}_\lambda(m)\\
-\ell\gets  \frac{\abs{m'}}{\lambda}\\
-\pcfor i=1..\ell\\
-\pcind \pcvar{pad}_i\gets f(k,\pcvar{nonce}+i)\\
-\pcvar{pad}'\gets\pcvar{pad}_1||..||\pcvar{pad}_\ell\\
-\pcvar{pad}\gets\pcvar{pad}_{1..\abs{m}}\\
-c\gets m \oplus \pcvar{pad}\\
-\pcreturn (\pcvar{nonce},c)}
-\pchspace
-\procedure{$\se_{\text{CTR-f}}.\O{dec}(k,(\pcvar{nonce},c))$}{
-\lambda\gets\abs{k}\\
-\ell\gets \frac{\abs{c}}{\lambda}\\
-\pcfor i=1..\ell\\
-\pcind \pcvar{pad}^i\gets f(k,\pcvar{nonce}+i)\\
-\pcvar{pad}'\gets\pcvar{pad}^1||..||\pcvar{pad}^\ell\\
-\pcvar{pad}\gets\pcvar{pad}_{1..\abs{c}}\\
-m'\gets c \oplus \pcvar{pad}\\
-m\gets\O{decode}_\lambda(m')\\
-\pcreturn m}
-\end{pchstack}
-\end{center}
+  Let $(\O{encode}_\lambda,\O{decode}_\lambda)$ be an encoding scheme and let $f$ be a secure $(\lambda,\lambda)$-secure pseudorandom function. Then, the encryption scheme $\se_{\text{CTR-f}}$ is IND-CPA-secure.
+  \begin{center}
+    \begin{pchstack}
+      \procedure{$\se_{\text{CTR-f}}.\O{enc}(k,m)$}{
+      \lambda\gets\abs{k}\\
+      \pcvar{nonce}\sample\bin^\lambda\\
+      m'\gets\O{encode}_\lambda(m)\\
+      \ell\gets  \frac{\abs{m'}}{\lambda}\\
+      \pcfor i=1..\ell\\
+      \pcind \pcvar{pad}_i\gets f(k,\pcvar{nonce}+i)\\
+      \pcvar{pad}'\gets\pcvar{pad}_1||..||\pcvar{pad}_\ell\\
+      \pcvar{pad}\gets\pcvar{pad}_{1..\abs{m}}\\
+      c\gets m \oplus \pcvar{pad}\\
+      \pcreturn (\pcvar{nonce},c)}
+      \pchspace
+      \procedure{$\se_{\text{CTR-f}}.\O{dec}(k,(\pcvar{nonce},c))$}{
+      \lambda\gets\abs{k}\\
+      \ell\gets \frac{\abs{c}}{\lambda}\\
+      \pcfor i=1..\ell\\
+      \pcind \pcvar{pad}^i\gets f(k,\pcvar{nonce}+i)\\
+      \pcvar{pad}'\gets\pcvar{pad}^1||..||\pcvar{pad}^\ell\\
+      \pcvar{pad}\gets\pcvar{pad}_{1..\abs{c}}\\
+      m'\gets c \oplus \pcvar{pad}\\
+      m\gets\O{decode}_\lambda(m')\\
+      \pcreturn m}
+    \end{pchstack}
+  \end{center}
 \end{theorem}
 
 
 \paragraph{Generic transformations on symmetric encryption schemes}
 \begin{theorem}[IND-CPA]
-If $\se$ is an IND-CPA secure symmetric encryption scheme, then $\se_1$ is an IND-CPA secure symmetric encryption scheme.
-\begin{center}
-\begin{theorem}[AE]
-If $\se$ is an IND-CPA secure symmetric encryption scheme, and $\m$ is an UNF-CMA-secure message authentication code, then
-$\se_{\text{etm}}$ is an AE-secure symmetric encryption scheme.
-\end{theorem}
+  If $\se$ is an IND-CPA secure symmetric encryption scheme, then $\se_1$ is an IND-CPA secure symmetric encryption scheme.
+  \begin{center}
+    \begin{theorem}[AE]
+      If $\se$ is an IND-CPA secure symmetric encryption scheme, and $\m$ is an UNF-CMA-secure message authentication code, then
+      $\se_{\text{etm}}$ is an AE-secure symmetric encryption scheme.
+    \end{theorem}
 
-\begin{pchstack}
-        \procedure{$\se_1.\enc(k,m)$}{
-          c'\sample\se.\enc(k,m)\\
-          c \gets c'||1 \\
-          \pcreturn c
-        }
-        \pcvspace
-        \procedure{$\se_1.\dec(k,c)$}{
-          c'\gets c[1..\abs{c}-1]\\
-          m\gets\se.\dec(k,c')\\
-          \pcreturn m
-        }
-    \pchspace
-    \procedure{$\se_{\text{etm}}.\enc(k,m)$}{
-			\pcparse (k_\m,k_\se)\gets k\\
-			c'\sample\se.\enc(k_\se,m)\\
-			\tau\sample\m.\mac(k_\m,c')\\
-     c \gets (c',\tau) \\
-      \pcreturn c
-    }
-    \pchspace
-    \procedure{$\se_{\text{etm}}.\dec(k,c)$}{
-			\pcparse (k_\m,k_\se)\gets k\\
-			\pcparse (c',\tau)\gets c\\
-			m\gets\se.\dec(k_\se,c')\\
-			\pcif 1\gets\verify(k_\m,c',\tau)\ \pcreturn m\\
-      \pcelse \pcreturn \bot
-    }  
-		\end{pchstack}
-\end{center}
+    \begin{pchstack}
+      \procedure{$\se_1.\enc(k,m)$}{
+        c'\sample\se.\enc(k,m)\\
+        c \gets c'||1 \\
+        \pcreturn c
+      }
+      \pcvspace
+      \procedure{$\se_1.\dec(k,c)$}{
+        c'\gets c[1..\abs{c}-1]\\
+        m\gets\se.\dec(k,c')\\
+        \pcreturn m
+      }
+      \pchspace
+      \procedure{$\se_{\text{etm}}.\enc(k,m)$}{
+        \pcparse (k_\m,k_\se)\gets k\\
+        c'\sample\se.\enc(k_\se,m)\\
+        \tau\sample\m.\mac(k_\m,c')\\
+        c \gets (c',\tau) \\
+        \pcreturn c
+      }
+      \pchspace
+      \procedure{$\se_{\text{etm}}.\dec(k,c)$}{
+        \pcparse (k_\m,k_\se)\gets k\\
+        \pcparse (c',\tau)\gets c\\
+        m\gets\se.\dec(k_\se,c')\\
+        \pcif 1\gets\verify(k_\m,c',\tau)\ \pcreturn m\\
+        \pcelse \pcreturn \bot
+      }
+    \end{pchstack}
+  \end{center}
 
 \end{theorem}

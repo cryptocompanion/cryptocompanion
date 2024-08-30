@@ -2,31 +2,31 @@
 A hardcore bit for a one-way function extracts a single, pseudorandom bit from a one-way function.
 
 \begin{definition}[HB syntax]
-A hardcore bit $b$ is a function $b:\bin^*\rightarrow\bin$ that can be computed in deterministic polynomial time.
+  A hardcore bit $b$ is a function $b:\bin^*\rightarrow\bin$ that can be computed in deterministic polynomial time.
 \end{definition}
 
 \begin{definition}[HB Security -- security experiment formulation]
-Let ${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},0}(1^\lambda)$ and ${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},1}(1^\lambda)$ be the security experiments defined by
-\begin{center}
-  \begin{pchstack}
-    \procedure{${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},0}(1^\lambda)$}{
-    x\sample\bin^\lambda\\
-    y\gets f(x)\\
-		z\gets b(x)\\
-    d^*\sample\adv(1^\lambda,y,z)\\
-    \pcreturn d^*}
-  \pchspace
-    \procedure{${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},1}(1^\lambda)$}{
-    x\sample\bin^\lambda\\
-    y\gets f(x)\\
-		z\sample\bin\\
-    d^*\sample\adv(1^\lambda,y,z)\\
-    \pcreturn d^*}
-  \end{pchstack}
+  Let ${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},0}(1^\lambda)$ and ${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},1}(1^\lambda)$ be the security experiments defined by
+  \begin{center}
+    \begin{pchstack}
+      \procedure{${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},0}(1^\lambda)$}{
+        x\sample\bin^\lambda\\
+        y\gets f(x)\\
+        z\gets b(x)\\
+        d^*\sample\adv(1^\lambda,y,z)\\
+        \pcreturn d^*}
+      \pchspace
+      \procedure{${\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},1}(1^\lambda)$}{
+        x\sample\bin^\lambda\\
+        y\gets f(x)\\
+        z\sample\bin\\
+        d^*\sample\adv(1^\lambda,y,z)\\
+        \pcreturn d^*}
+    \end{pchstack}
   \end{center}
-A polytime computable 1-output-bit function $b$ is a \emph{hardcore bit} for 
-a one-way function $f$ if for all PPT adversaries $\adv$ the difference
-\[ \big|\prob{{\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},0}(1^\lambda) = 1} 
-   - \prob{{\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},1}(1^\lambda) = 1}\big| \]
-is negligible in $\lambda$.
+  A polytime computable 1-output-bit function $b$ is a \emph{hardcore bit} for
+  a one-way function $f$ if for all PPT adversaries $\adv$ the difference
+  \[ \big|\prob{{\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},0}(1^\lambda) = 1}
+    - \prob{{\mathsf{Exp}}_{f,b,\adv}^{\mathsf{HB},1}(1^\lambda) = 1}\big| \]
+  is negligible in $\lambda$.
 \end{definition}

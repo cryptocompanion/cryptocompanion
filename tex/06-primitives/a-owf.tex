@@ -2,137 +2,137 @@
 The idea for one-way functions is that they are \emph{easy to compute} but \emph{hard to invert}.
 
 \begin{syntax}[One-way function (OWF)]
-A \emph{one-way function} is a deterministic function 
-\[f:\bin^*\rightarrow\bin^*\] 
-that can be computed in deterministic polynomial time.
+	A \emph{one-way function} is a deterministic function
+	\[f:\bin^*\rightarrow\bin^*\]
+	that can be computed in deterministic polynomial time.
 \end{syntax}
 
 One-way functions are not as natural to define in terms of distinguishing games as other primitives. We therefore define it first by a \emph{security experiment}, before giving a formulation via indistinguishability of a real and an ideal game for completeness.
 
 \begin{security}[One-wayness]\label{secdef:owf}
-Let ${\mathsf{Exp}}_{f,\adv}^{\mathsf{OW}}(1^\lambda)$ be a security experiment defined by
-\begin{center}
-	  \procedure{${\mathsf{Exp}}_{f,\adv}^{\mathsf{OW}}(1^\lambda)$}{
-		x\sample\bin^\lambda\\
-		y\gets f(x)\\
-		x'\sample\adv(1^\lambda,y)\\
-		\pcif \abs{x'}\neq\lambda \pcthen\\
-		\pcind \pcreturn 0\\
-		\pcif f(x')=y \pcthen\\
-		\pcind \pcreturn 1\\
-		\pcreturn 0}
-\end{center}
-A (deterministic) function $f$ is one-way if for all PPT adversaries $\adv$ the probability $\mathsf{Win}^{\mathsf{ow}}_{f,\adv}(1^\lambda):=\prob{1={\mathsf{Exp}}_{f,\adv}^{\mathsf{ow}}(1^\lambda)}$ is negligible in $\lambda$.
+	Let ${\mathsf{Exp}}_{f,\adv}^{\mathsf{OW}}(1^\lambda)$ be a security experiment defined by
+	\begin{center}
+		\procedure{${\mathsf{Exp}}_{f,\adv}^{\mathsf{OW}}(1^\lambda)$}{
+			x\sample\bin^\lambda\\
+			y\gets f(x)\\
+			x'\sample\adv(1^\lambda,y)\\
+			\pcif \abs{x'}\neq\lambda:\\
+			\pcind \pcreturn 0\\
+			\pcif f(x')=y:\\
+			\pcind \pcreturn 1\\
+			\pcreturn 0}
+	\end{center}
+	A (deterministic) function $f$ is one-way if for all PPT adversaries $\adv$ the probability $\mathsf{Win}^{\mathsf{ow}}_{f,\adv}(1^\lambda):=\prob{1={\mathsf{Exp}}_{f,\adv}^{\mathsf{ow}}(1^\lambda)}$ is negligible in $\lambda$.
 \end{security}
 
 \begin{security}[OW]
-Let $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ be the games
-\begin{codebox}
-\begin{center}
-	\begin{pchstack}
-		\pchspace
-		  \begin{pcvstack}
-			\underline{\underline{$\textsf{Gowf}_f^0$}}\\
-	                \\
-              \procedure{Package Parameters}{
-				\lambda\text{:} \< \quad \text{security parameter}\\
-			  f\text{:} \< \quad \text{function} 
-			              }
-										\pcvspace
-										              \procedure{Package State}{
-				x\text{:} \< \quad \text{random value}\\ 
-				y\text{:} \< \quad \text{image value} 
-			              }
-										\pcvspace
-	  	\procedure{$\O{SAMPLE}()$}{
-			\pcassert y = \bot\\
-			x \sample \bin^\lambda\\
-			y \gets f(x)\\
-			\pcreturn y}
-     \pcvspace
-		\procedure{$\O{CHECK}(x)$}{
- 		  \pcif \abs{x}\neq\lambda \pcthen\\
-		 \pcind \pcreturn 0\\
-			y' \gets f(x) \\
-			\pcif y=y': \\
-			\pcind	\pcreturn 1 \\
-			\pcelse \\
-			\pcind	\pcreturn 0 \\
-			}
-	\end{pcvstack}
-			\pchspace
-			\begin{pcvstack}
-			\underline{\underline{$\textsf{Gowf}_f^1$}}\\
-	                \\
-              \procedure{Package Parameters}{
-				\lambda\text{:} \< \quad \text{security parameter}\\
-			  f\text{:} \< \quad \text{function} 
-			              }
-										\pcvspace
-										              \procedure{Package State}{
-				x\text{:} \< \quad \text{random value}\\ 
-				y\text{:} \< \quad \text{image value} 
-			              }
-			\pcvspace										
-			\procedure{$\O{SAMPLE}()$}{
-			\pcassert y = \bot\\
-			x \sample \bin^\lambda\\
-			y \gets f(x)\\
-			\pcreturn y}
-      \pcvspace
-		\procedure{$\O{CHECK}(x)$}{
-		  \\
-			\\
-			\\
-			\\
-			\\
-			\\
-				\pcreturn 0 \\
-			}		
-		\end{pcvstack}
-	\end{pchstack}
-\end{center}
-\end{codebox}
-\iffalse
-\begin{center}
-	\begin{pchstack}
-		\pchspace
-		  \begin{pcvstack}
-			\underline{\underline{$\textsf{Gowf}_f^0$}}\\
-			\\
-	  	\procedure{$\O{VALUE}(x)$}{
-			\pcassert y = \bot
-			y \sample \bin\\
-			\pcreturn y}
-     \pcvspace
-		\procedure{$\O{INVERT}(x)$}{
-			\pcassert k = \bot
-			k \gets \O{GET} \\
-			y' \gets f(k,x) \\
-			\pcif y=y': \\
-				\pcreturn 1 \\
-			\pcelse \\
-				\pcreturn 0 \\
-			}
-	\end{pcvstack}
-			\pchspace
-	\begin{pcvstack}
-				\underline{\underline{$\textsf{Gowf}_f^0$}}\\
-				\\
-			\procedure{$\O{VALUE}(x)$}{
-				\pcassert y = \bot
-				y \sample \bin\\
-				\pcreturn y}
-     \pcvspace	
-			\procedure{$\O{CHECK}(x,y)$}{
-				\pcassert k = \bot
-				k \gets \O{GET} \\
-				\pcreturn 0
-				}
-		\end{pcvstack}
-	\end{pchstack}
-\end{center}
-\end{codebox}
-\fi
-A one-way function $f$ is OW-secure if the real and ideal games $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ are computationally indistinguishable.
+	Let $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ be the games
+	\begin{codebox}
+		\begin{center}
+			\begin{pchstack}
+				\pchspace
+				\begin{pcvstack}
+					\underline{\underline{$\textsf{Gowf}_f^0$}}\\
+					\\
+					\procedure{Package Parameters}{
+						\lambda\text{:} \< \quad \text{security parameter}\\
+						f\text{:} \< \quad \text{function}
+					}
+					\pcvspace
+					\procedure{Package State}{
+						x\text{:} \< \quad \text{random value}\\
+						y\text{:} \< \quad \text{image value}
+					}
+					\pcvspace
+					\procedure{$\O{SAMPLE}()$}{
+						\pcassert y = \bot\\
+						x \sample \bin^\lambda\\
+						y \gets f(x)\\
+						\pcreturn y}
+					\pcvspace
+					\procedure{$\O{CHECK}(x)$}{
+						\pcif \abs{x}\neq\lambda:\\
+						\pcind \pcreturn 0\\
+						y' \gets f(x) \\
+						\pcif y=y': \\
+						\pcind	\pcreturn 1 \\
+						\pcelse \\
+						\pcind	\pcreturn 0 \\
+					}
+				\end{pcvstack}
+				\pchspace
+				\begin{pcvstack}
+					\underline{\underline{$\textsf{Gowf}_f^1$}}\\
+					\\
+					\procedure{Package Parameters}{
+						\lambda\text{:} \< \quad \text{security parameter}\\
+						f\text{:} \< \quad \text{function}
+					}
+					\pcvspace
+					\procedure{Package State}{
+						x\text{:} \< \quad \text{random value}\\
+						y\text{:} \< \quad \text{image value}
+					}
+					\pcvspace
+					\procedure{$\O{SAMPLE}()$}{
+						\pcassert y = \bot\\
+						x \sample \bin^\lambda\\
+						y \gets f(x)\\
+						\pcreturn y}
+					\pcvspace
+					\procedure{$\O{CHECK}(x)$}{
+						\\
+						\\
+						\\
+						\\
+						\\
+						\\
+						\pcreturn 0 \\
+					}
+				\end{pcvstack}
+			\end{pchstack}
+		\end{center}
+	\end{codebox}
+	\iffalse
+		\begin{center}
+			\begin{pchstack}
+				\pchspace
+				\begin{pcvstack}
+					\underline{\underline{$\textsf{Gowf}_f^0$}}\\
+					\\
+					\procedure{$\O{VALUE}(x)$}{
+						\pcassert y = \bot
+						y \sample \bin\\
+						\pcreturn y}
+					\pcvspace
+					\procedure{$\O{INVERT}(x)$}{
+						\pcassert k = \bot
+						k \gets \O{GET} \\
+						y' \gets f(k,x) \\
+						\pcif y=y': \\
+						\pcreturn 1 \\
+						\pcelse \\
+						\pcreturn 0 \\
+					}
+				\end{pcvstack}
+				\pchspace
+				\begin{pcvstack}
+					\underline{\underline{$\textsf{Gowf}_f^0$}}\\
+					\\
+					\procedure{$\O{VALUE}(x)$}{
+						\pcassert y = \bot
+						y \sample \bin\\
+						\pcreturn y}
+					\pcvspace
+					\procedure{$\O{CHECK}(x,y)$}{
+						\pcassert k = \bot
+						k \gets \O{GET} \\
+						\pcreturn 0
+					}
+				\end{pcvstack}
+			\end{pchstack}
+		\end{center}
+		\end{codebox}
+	\fi
+	A one-way function $f$ is OW-secure if the real and ideal games $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ are computationally indistinguishable.
 \end{security}

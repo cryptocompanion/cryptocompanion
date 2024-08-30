@@ -4,7 +4,7 @@ A cryptographic game is \emph{stateful} and provides a set of \emph{oracles} to 
 adversary. Oracles are functions that operate on the adversary's input and the (secret)
 game state. Cryptographic games also have \emph{game parameters} such as the
 cryptographic algorithm or a security parameter. You might wonder why we call oracles
-oracles rather than calling them functions and algorithms---while we are not fully 
+oracles rather than calling them functions and algorithms---while we are not fully
 aware of the origin of the term, the intuition behind this name is that they provide
 an answer (to the adversary) but without the caller (the adversary) knowing how
 exactly the answer was produced. Thus, we sometimes also refer to the set of oracles that
@@ -16,71 +16,71 @@ Game parameters are introduced for convenience: they allow us to fine-tune the g
 
 \begin{figure}
 	\begin{center}
-	\begin{pcvstack}
-		\underline{\underline{$\M{Gamename}$}}
-		\\
-	\begin{pchstack}
-              \procedure{Game Parameters}{
-							\text{no parameters}\\
-							\\
-							\text{or}\\
-							\\
-							\text{parameter 1}\\
-							\hdots\\
-							\text{parameter }\ell
-			              }
-		\pchspace
-						\procedure{Game State}{
-						\text{no state}\\
-							\\
-							\text{or}\\
-							\\
-							\text{state 1}\\
-							\hdots\\
-							\text{state }\ell'
-			              }
-	\end{pchstack}
-		\pcvspace
-	\begin{pchstack}	
-		\procedure{$\O{ORACLE\text{-}NAME}_1(\text{input}_1)$}{
-		  \text{pseudocode using input}_1\text{ and}\\
-			\text{parameter 1..parameter }\ell\text{ and}\\
-			\text{reading and writing variables}\\
-			\text{in state 1..state }\ell'\\
-			\pcreturn \text{output}_1}
-    \pchspace
+		\begin{pcvstack}
+			\underline{\underline{$\M{Gamename}$}}
+			\\
+			\begin{pchstack}
+				\procedure{Game Parameters}{
+					\text{no parameters}\\
+					\\
+					\text{or}\\
+					\\
+					\text{parameter 1}\\
+					\hdots\\
+					\text{parameter }\ell
+				}
+				\pchspace
+				\procedure{Game State}{
+					\text{no state}\\
+					\\
+					\text{or}\\
+					\\
+					\text{state 1}\\
+					\hdots\\
+					\text{state }\ell'
+				}
+			\end{pchstack}
+			\pcvspace
+			\begin{pchstack}
+				\procedure{$\O{ORACLE\text{-}NAME}_1(\text{input}_1)$}{
+					\text{pseudocode using input}_1\text{ and}\\
+					\text{parameter 1..parameter }\ell\text{ and}\\
+					\text{reading and writing variables}\\
+					\text{in state 1..state }\ell'\\
+					\pcreturn \text{output}_1}
+				\pchspace
 				\procedure{$\O{ORACLE\text{-}NAME}_2(\text{input}_2)$}{
-		  \text{pseudocode using input}_2\text{ and}\\
-			\text{parameter 1..parameter }\ell\text{ and}\\
-			\text{reading and writing variables}\\
-			\text{in state 1..state }\ell'\\
-			\pcreturn \text{output}_2}
-    \pchspace
-       ...
-		\pchspace
+					\text{pseudocode using input}_2\text{ and}\\
+					\text{parameter 1..parameter }\ell\text{ and}\\
+					\text{reading and writing variables}\\
+					\text{in state 1..state }\ell'\\
+					\pcreturn \text{output}_2}
+				\pchspace
+				...
+				\pchspace
 				\procedure{$\O{ORACLE\text{-}NAME}_m(\text{input}_m)$}{
-		  \text{pseudocode using input}_m\text{ and}\\
-			\text{parameter 1..parameter }\ell\text{ and}\\
-			\text{reading and writing variables}\\
-			\text{in state 1..state }\ell'\\
-			\pcreturn \text{output}_m}
-	\end{pchstack}
-	\end{pcvstack}
+					\text{pseudocode using input}_m\text{ and}\\
+					\text{parameter 1..parameter }\ell\text{ and}\\
+					\text{reading and writing variables}\\
+					\text{in state 1..state }\ell'\\
+					\pcreturn \text{output}_m}
+			\end{pchstack}
+		\end{pcvstack}
 	\end{center}
 	\caption{A game with $m$ oracles}\label{fig:packages}
 \end{figure}
 
-Sometimes, we want to make a particular parameter of a game explicit. In this case, we write $\M{Gamename}_(\text{parameter i}=v)$ to emphasize that we consider a game with parameter $i$ being equal to value $v$. If the parameter being defined is apparent from context, we may just write $\M{Gamename}_v$ to mean the same thing. However, most of the time the parameters are clear from context. A parameter we often leave implicit is the security parameter (see Section \ref{sssec:security-parameter} for a definition).
+Sometimes, we want to make a particular parameter of a game explicit. In this case, we write $\M{Gamename}_(\text{parameter i}\gets{v})$ to emphasize that we consider a game with parameter $i$ being equal to value $v$. If the parameter being defined is apparent from context, we may just write $\M{Gamename}_v$ to mean the same thing. However, most of the time the parameters are clear from context. A parameter we often leave implicit is the security parameter (see Section \ref{sssec:security-parameter} for a definition).
 
 We want to let an adversary $\adv$ interact with a game $\M{G}$, i.e., the adversary $\adv$ is the \emph{main procedure} which makes calls to $\M{G}$ and, in the end, $\adv$ returns a bit $b$ (more on this later). We write $\adv\rightarrow\M{G}$ for the composed process of the adversary $\adv$, composed with the game $\M{G}$.
 Since our algorithms can be randomized, entire games can be as well. The probability that an adversary ($\adv$) outputs a certain values when interacting with a system ($\M{G}$) comes up often. If both $\adv$ and $\M{G}$ were deterministic, $\adv \circ \M{G}$ would represent the value that $\adv$ returns. Similarly
 \[\prob{\adv \circ \M{G} = 1}\]
 represent the probability that $\adv$ returns $1$ when interacting with $\M{G}$.
 
-We call algorithms that are polynomial-time (see Section~\ref{ssec:runtime}) and randomized \emph{probabilistic polynomial-time} or \emph{PPT} algorithms. 
+We call algorithms that are polynomial-time (see Section~\ref{ssec:runtime}) and randomized \emph{probabilistic polynomial-time} or \emph{PPT} algorithms.
 
 As shortly discussed in Section~\ref{ssec:security-foundations} in the paragraph on security games, one can capture the security of cryptographic systems in different ways. One of them considers whether the system is computationally indistinguishable from a perfect system, and the other whether there is some information that is hard for the adversary to obtain. We call these \emph{decision} and \emph{search} games. As it turns out, search games can always be formulated as decision games, but it remains the case that some systems are easier to describe as search games---however, we only discuss search games informally and specify security of all primitives as decision games, see Section~\ref{sssec:decision-games}.
- 
+
 \subsubsection{The security parameter}\label{sssec:security-parameter}
 In cryptographic systems, there is often some parameter which can be changed to improve security. The simplest and most common example is a key: the longer the key, the harder the system should be to break.
 
@@ -100,12 +100,12 @@ for the probability that $\adv$ returns $1$ when interacting with $\M{G}$. The p
 In the context of a security game, we use the notation $G^0$ to denote the \emph{real game} and $G^1$ to denote the \emph{ideal game} (see Section \ref{ssec:security-foundations} for a discussion of real and ideal games). It is often useful to use the notation $G^b$ to discuss both games at once: it denotes the real game when $b=0$ and the ideal game when $b=1$. We then call $b$ the \emph{security bit}. Jumping ahead, we note that a proof step that turns $G^0$ into $G^1$ is called \emph{idealizing} the game.
 
 \begin{definition}[Advantage]
-The advantage of an adversary $\adv$ in distinguishing between games $G^0$ and $G^1$ is the value
-\[{\mathbf{Adv}}_{\adv}^{\M{G}^0,\M{G}^1}(\lambda) := \abs{\prob{1=\adv \circ \M{G}^0} - \prob{1 = \adv \circ \M{G}^1}},\]
-This means that ${\mathbf{Adv}}_{\adv}^{\M{G}^0,\M{G}^1}$ is a function $\NN\rightarrow [0,1]$, where $n\in\NN$ is mapped to
-\begin{equation}\label{defeq:advantage}
-\abs{\prob{1=\adv(\lambda\gets n) \circ \M{G}^0(\lambda\gets n)} - \prob{1 = \adv(\lambda\gets n) \circ \M{G}^1(\lambda\gets n)}}.
-\end{equation}
+	The advantage of an adversary $\adv$ in distinguishing between games $G^0$ and $G^1$ is the value
+	\[{\mathbf{Adv}}_{\adv}^{\M{G}^0,\M{G}^1}(\lambda) := \abs{\prob{1=\adv \circ \M{G}^0} - \prob{1 = \adv \circ \M{G}^1}},\]
+	This means that ${\mathbf{Adv}}_{\adv}^{\M{G}^0,\M{G}^1}$ is a function $\NN\rightarrow [0,1]$, where $n\in\NN$ is mapped to
+	\begin{equation}\label{defeq:advantage}
+		\abs{\prob{1=\adv(\lambda\gets n) \circ \M{G}^0(\lambda\gets n)} - \prob{1 = \adv(\lambda\gets n) \circ \M{G}^1(\lambda\gets n)}}.
+	\end{equation}
 \end{definition}
 \paragraph{Remark} We tend to use this notation in a flexible way. E.g., we sometimes add additional subscripts into the advantage definition to emphasize parameters on which the games $\M{G}^0$ and  $\M{G}^1$ depend. We also sometimes only use superscript $\M{G}$. Sometimes we write also write ${\mathbf{Adv}}_{\adv}^{\M{G}^0,\M{G}^1}(\lambda) = \adv(A; \M{G}^0, \M{G}^1)(\lambda)$.
 \paragraph{Remar} Note that we simply compare the probability that $\adv$ returns $1$ when interacting with $\M{G}^0$ with the probability that $\adv$ returns $1$ when interacting with $\M{G}^1$. Alternatively, one could define the advantage as
@@ -114,27 +114,27 @@ $\tilde{\textbf{Adv}}$ and $\textbf{Adv}$ are essentially equivalent, except tha
 
 \paragraph{Negligible functions}
 As mentioned in Section~\ref{sssec:security-parameter}, the notion of advantage is \emph{asymptotic}, i.e., it is a function
-which changes as $n$ goes towards infinity. If the advantage is high, then $\adv$ is good in distinguishing $\M{G}^0$ from $\M{G}^1$. By saying that $\M{G}^0$ is \emph{indistinguishable} from $\M{G}^1$, we meant that for all polynomial-time adversaries $\adv$, the advantage ${\mathbf{Adv}}(\adv;\M{G}^0,\M{G}^1)$ is small. But how small exactly is small enough? This is a good subject for debate. For this book, we simply choose a notion of \emph{small} which is meaningfully small and easy to work with. We call this notion of small \emph{negligible} and say that a function $\NN\rightarrow \RR_0^+$ is negligible if it tends to zero faster than any positive inverse polynomial. This somewhat technical definition has the benefit that it composes well, i.e., one can multiply a negligible function by a polynomial and it remains negligible, and one can sum two negligible functions and the result remains negligible. For the proofs in this book, the definition of a negligible function is not used directly, but the results in claim $\ref{negl-claims}$ are. You can thus just think of "negligble" as meaning "small", together with the properties in the claim. 
+which changes as $n$ goes towards infinity. If the advantage is high, then $\adv$ is good in distinguishing $\M{G}^0$ from $\M{G}^1$. By saying that $\M{G}^0$ is \emph{indistinguishable} from $\M{G}^1$, we meant that for all polynomial-time adversaries $\adv$, the advantage ${\mathbf{Adv}}(\adv;\M{G}^0,\M{G}^1)$ is small. But how small exactly is small enough? This is a good subject for debate. For this book, we simply choose a notion of \emph{small} which is meaningfully small and easy to work with. We call this notion of small \emph{negligible} and say that a function $\NN\rightarrow \RR_0^+$ is negligible if it tends to zero faster than any positive inverse polynomial. This somewhat technical definition has the benefit that it composes well, i.e., one can multiply a negligible function by a polynomial and it remains negligible, and one can sum two negligible functions and the result remains negligible. For the proofs in this book, the definition of a negligible function is not used directly, but the results in claim $\ref{negl-claims}$ are. You can thus just think of "negligble" as meaning "small", together with the properties in the claim.
 
 \begin{definition}[Negligible Function]
-A function $\nu:\NN\rightarrow\RR_0^+$ is negligible if it converges to $0$ faster than any positive inverse polynomial, i.e., for all constants $c$, there is a natural number $N\in\NN$ such that for all $\lambda>N$, it holds that $\nu(\lambda)<\frac{1}{\lambda^c}$.
+	A function $\nu:\NN\rightarrow\RR_0^+$ is negligible if it converges to $0$ faster than any positive inverse polynomial, i.e., for all constants $c$, there is a natural number $N\in\NN$ such that for all $\lambda>N$, it holds that $\nu(\lambda)<\frac{1}{\lambda^c}$.
 \end{definition}
 This definition is convenient to work with as long as we are aware of the following two properties:
 \begin{claim}\label{negl-claims}
-For two negligible functions $\nu:\NN\rightarrow\RR_0^+$ and $\mu:\NN\rightarrow\RR_0^+$, the following hold:
-\begin{itemize}
-\item $\nu+\mu:\NN\rightarrow\RR_0^+$, $\lambda\mapsto\nu(\lambda)+\mu(\lambda)$ is negligible.
-\item For every positive polynomial $p$, $p\cdot\nu:\NN\rightarrow\RR_0^+$, $\lambda\mapsto p(\lambda)\cdot\nu(\lambda)$ is negligible.
-\end{itemize}
+	For two negligible functions $\nu:\NN\rightarrow\RR_0^+$ and $\mu:\NN\rightarrow\RR_0^+$, the following hold:
+	\begin{itemize}
+		\item $\nu+\mu:\NN\rightarrow\RR_0^+$, $\lambda\mapsto\nu(\lambda)+\mu(\lambda)$ is negligible.
+		\item For every positive polynomial $p$, $p\cdot\nu:\NN\rightarrow\RR_0^+$, $\lambda\mapsto p(\lambda)\cdot\nu(\lambda)$ is negligible.
+	\end{itemize}
 \end{claim}
 
 
 
 
 \begin{definition}[Computational indistinguishability]
-Two games $G^0$ and $G^1$ are computationally in\-distinguish\-able, written $G^0 \approx G^1$, if for all PPT adversaries $\adv$,
-\[\mathbf{Adv}^{\M{G}^0,\M{G}^1}_{A}(\lambda)\]
-is a negligible function in the security parameter $\lambda$.
+	Two games $G^0$ and $G^1$ are computationally in\-distinguish\-able, written $G^0 \approx G^1$, if for all PPT adversaries $\adv$,
+	\[\mathbf{Adv}^{\M{G}^0,\M{G}^1}_{A}(\lambda)\]
+	is a negligible function in the security parameter $\lambda$.
 \end{definition}
 
 

@@ -3,14 +3,14 @@
 A symmetric encryption (SE) scheme is meant to encrypt messages using a symmetric key, meaning a key that is posessed by both the sender and receiver. A SE scheme consist of two tasks: encrypting and decrypting messages. The task of the encryption algorithm is to take an input string and produce a ciphertext based on a secret key. The task of the decryption algorithm is to use the same secret key to decrypt the message.
 
 \begin{syntax}[Syntax of a Symmetric Encryption Scheme (SE)]
-  A \emph{symmetric encryption scheme} $\se$ consists of two probabilistic polynomial-time (PPT) algorithms
-  \begin{align*}
-	c \sample&\se.\enc(k,m) \\
-	m\gets&\se.\dec(k,c)
-  \end{align*}
-  which have to satisfy the correctness criterion
-  \[\forall m\in\bin^* \probsub{k\sample\bin^n}{\se.\dec(k,\se.\enc(k,m))=m}=1\]
-  i.e. when a ciphertext is created using the encryption algorithm, the decryption always returns the original message
+	A \emph{symmetric encryption scheme} $\se$ consists of two probabilistic polynomial-time (PPT) algorithms
+	\begin{align*}
+		c \sample & \se.\enc(k,m) \\
+		m\gets    & \se.\dec(k,c)
+	\end{align*}
+	which have to satisfy the correctness criterion
+	\[\forall m\in\bin^* \probsub{k\sample\bin^n}{\se.\dec(k,\se.\enc(k,m))=m}=1\]
+	i.e. when a ciphertext is created using the encryption algorithm, the decryption always returns the original message
 \end{syntax}
 
 \begin{remark}
@@ -18,60 +18,60 @@ A symmetric encryption (SE) scheme is meant to encrypt messages using a symmetri
 \end{remark}
 
 \begin{security}[IND-CPA]
-Let the games $\M{Gind\text{-}cpa}^0_\se$, $\M{Gind\text{-}cpa}^1_\se$ be defined as
-\begin{codebox}
-	\begin{center}
-		\begin{pchstack}
-		  \begin{pcvstack}
+	Let the games $\M{Gind\text{-}cpa}^0_\se$, $\M{Gind\text{-}cpa}^1_\se$ be defined as
+	\begin{codebox}
+		\begin{center}
+			\begin{pchstack}
+				\begin{pcvstack}
 					\underline{\underline{$\M{Gind\text{-}cpa}^0_\se$}}\\
-				  \procedure{Parameters}{
-					\lambda\text{:} \< \quad \text{sec. parameter}\\
-				  \se\text{:} \< \quad \text{sym. enc. sch.}
-							  }
-											\pcvspace
-														  \procedure{Package State}{
-				   k\text{:} \< \quad \text{key} \\
-							  }
-											\pcvspace
-			  \procedure{$\O{ENC}(x)$}{
-					\pcif k=\bot:\\
-					\pcind k\sample\bin^\lambda\\
-				\\
-				 c\sample \se.\enc(k,x)\\
-				\pcreturn c}
-			\end{pcvstack}
-				 \pchspace
-		  \begin{pcvstack}
+					\procedure{Parameters}{
+						\lambda\text{:} \< \quad \text{sec. parameter}\\
+						\se\text{:} \< \quad \text{sym. enc. sch.}
+					}
+					\pcvspace
+					\procedure{Package State}{
+						k\text{:} \< \quad \text{key} \\
+					}
+					\pcvspace
+					\procedure{$\O{ENC}(x)$}{
+						\pcif k=\bot:\\
+						\pcind k\sample\bin^\lambda\\
+						\\
+						c\sample \se.\enc(k,x)\\
+						\pcreturn c}
+				\end{pcvstack}
+				\pchspace
+				\begin{pcvstack}
 					\underline{\underline{$\M{Gind\text{-}cpa}^1_\se$}}\\
-				  \procedure{Parameters}{
-					\lambda\text{:} \< \quad \text{sec. parameter}\\
-				  \se\text{:} \< \quad \text{sym. enc. sch.}
-							  }
-											\pcvspace
-														  \procedure{Package State}{
-				   k\text{:} \< \quad \text{key} \\
-							  }
-											\pcvspace
-			  \procedure{$\O{ENC}(x)$}{
-				  \pcif k=\bot:\\
-					\pcind k\sample\bin^\lambda\\
-					x'\gets 0^{\abs{x}}\\
-				 c\sample \se.\enc(k,x')\\
-				\pcreturn c}
-			\end{pcvstack}
-		\end{pchstack}
-	\end{center}
+					\procedure{Parameters}{
+						\lambda\text{:} \< \quad \text{sec. parameter}\\
+						\se\text{:} \< \quad \text{sym. enc. sch.}
+					}
+					\pcvspace
+					\procedure{Package State}{
+						k\text{:} \< \quad \text{key} \\
+					}
+					\pcvspace
+					\procedure{$\O{ENC}(x)$}{
+						\pcif k=\bot:\\
+						\pcind k\sample\bin^\lambda\\
+						x'\gets 0^{\abs{x}}\\
+						c\sample \se.\enc(k,x')\\
+						\pcreturn c}
+				\end{pcvstack}
+			\end{pchstack}
+		\end{center}
 	\end{codebox}
 	\vspace{5mm}
 
-A symmetric encryption scheme $\se$ is IND-CPA-secure if the real game $\M{Gind\text{-}cpa}^0_\se$ and the ideal game $\M{Gind\text{-}cpa}^1_\se$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
-\[\mathbf{Adv}_{\adv}^{
-	\M{Gind\text{-}cpa}^0_\se
-	,\M{Gind\text{-}cpa}^1_\se}
-	(\lambda)
-	:=\abs{\prob{1=\adv\circ \M{Gind\text{-}cpa}^0_\se}-\prob{1=\adv\circ \M{Gind\text{-}cpa}^1_\se}}
+	A symmetric encryption scheme $\se$ is IND-CPA-secure if the real game $\M{Gind\text{-}cpa}^0_\se$ and the ideal game $\M{Gind\text{-}cpa}^1_\se$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
+	\[\mathbf{Adv}_{\adv}^{
+		\M{Gind\text{-}cpa}^0_\se
+		,\M{Gind\text{-}cpa}^1_\se}
+		(\lambda)
+		:=\abs{\prob{1=\adv\circ \M{Gind\text{-}cpa}^0_\se}-\prob{1=\adv\circ \M{Gind\text{-}cpa}^1_\se}}
 	\]
-is negligible in $\lambda$.
+	is negligible in $\lambda$.
 \end{security}
 
 
@@ -80,60 +80,60 @@ is negligible in $\lambda$.
 	\begin{codebox}
 		\begin{center}
 			\begin{pchstack}
-			  \begin{pcvstack}
-						\underline{\underline{$\M{Gae}^0_\se$}}\\
-					  \procedure{Parameters}{
+				\begin{pcvstack}
+					\underline{\underline{$\M{Gae}^0_\se$}}\\
+					\procedure{Parameters}{
 						\lambda\text{:} \< \quad \text{sec. parameter}\\
-					  \se\text{:} \< \quad \text{sym. enc. sch.}
-								  }
-												\pcvspace
-															  \procedure{Package State}{
-					   k\text{:} \< \quad \text{key} \\
-								  }
-												\pcvspace
-				  \procedure{$\O{ENC}(x)$}{
+						\se\text{:} \< \quad \text{sym. enc. sch.}
+					}
+					\pcvspace
+					\procedure{Package State}{
+						k\text{:} \< \quad \text{key} \\
+					}
+					\pcvspace
+					\procedure{$\O{ENC}(x)$}{
 						\pcif k=\bot:\\
 						\pcind k\sample\bin^\lambda\\
-					\\
-					 c\sample \se.\enc(k,x)\\
-					\\
-					\pcreturn c}
-																\pcvspace
-				  \procedure{$\O{DEC}(c)$}{
+						\\
+						c\sample \se.\enc(k,x)\\
+						\\
+						\pcreturn c}
+					\pcvspace
+					\procedure{$\O{DEC}(c)$}{
 						\pcif k=\bot:\\
 						\pcind k\sample\bin^\lambda\\
-					  x\gets\se.\dec(k,c)\\
-					\pcreturn x}
+						x\gets\se.\dec(k,c)\\
+						\pcreturn x}
 				\end{pcvstack}
-					 \pchspace
-			  \begin{pcvstack}
-						\underline{\underline{$\M{Gae}^1_\se$}}\\
-					  \procedure{Parameters}{
+				\pchspace
+				\begin{pcvstack}
+					\underline{\underline{$\M{Gae}^1_\se$}}\\
+					\procedure{Parameters}{
 						\lambda\text{:} \< \quad \text{sec. parameter}\\
-					  \se\text{:} \< \quad \text{sym. enc. sch.}
-								  }
-												\pcvspace
-															  \procedure{Package State}{
+						\se\text{:} \< \quad \text{sym. enc. sch.}
+					}
+					\pcvspace
+					\procedure{Package State}{
 						k\text{:} \< \quad \text{key} \\
 						T\text{:} \< \quad \text{table}
-								  }
-												\pcvspace
-				  \procedure{$\O{ENC}(x)$}{
+					}
+					\pcvspace
+					\procedure{$\O{ENC}(x)$}{
 						\pcif k=\bot:\\
 						\pcind k\sample\bin^\lambda\\
 						x'\gets 0^{\abs{x}}\\
-					  c\sample \se.\enc(k,x')\\
-					T[c]\gets x\\
-					\pcreturn c}
+						c\sample \se.\enc(k,x')\\
+						T[c]\gets x\\
+						\pcreturn c}
 					\pcvspace
-				  \procedure{$\O{DEC}(c)$}{
-					   x\gets T[c]\\
-					\pcreturn x}
+					\procedure{$\O{DEC}(c)$}{
+						x\gets T[c]\\
+						\pcreturn x}
 				\end{pcvstack}
 			\end{pchstack}
 		\end{center}
-		\end{codebox}
-		\vspace{5mm}
+	\end{codebox}
+	\vspace{5mm}
 
 	A symmetric encryption scheme is AE-secure if the real game $\M{Gae}^0_\se$ and the ideal game $\M{Gae}^1_\se$ are computationally indistinguishable, that is, for all PPT adversaries $\adv$, the advantage
 	\[\mathbf{Adv}_{\adv}^{\M{Gae}^0_\se,\M{Gae}^1_\se}(\lambda):=\abs{\prob{1=\adv\circ \M{Gae}^0_\se}-\prob{1=\adv\circ \M{Gae}^1_\se}}\]

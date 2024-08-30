@@ -1,13 +1,13 @@
 \subsection{Code equivalence}
 A recurring task we will encounter is proving that two pieces of code behave in the same way. These pieces of code could be algorithms, packages or compositions of packages. For example, in proving relationships between primitives, we often wish to prove that some piece of code behaves in the same way as a primitive. One of the main benefits of using pseudocode as our model of computation is being able to do proofs of this type rigorously. In this section, we will discuss what we mean by two pieces of code behaving in the same way, and the ways to prove that they do.
 
-The way we model two pieces of code behaving in the same way is by the concept of \emph{code equivalence}. Two pieces of code being code-equivalent means that, after applying certain transformations to the code of one or both of them, they have exactly the same code. These transformations should be ones that don't alter the input-output behaviour of the code. Then, we can say that two pieces of code-equivalent code have the same input-output behaviour. Here is a list of common transformations 
+The way we model two pieces of code behaving in the same way is by the concept of \emph{code equivalence}. Two pieces of code being code-equivalent means that, after applying certain transformations to the code of one or both of them, they have exactly the same code. These transformations should be ones that don't alter the input-output behaviour of the code. Then, we can say that two pieces of code-equivalent code have the same input-output behaviour. Here is a list of common transformations
 \begin{itemize}
-    \item Inlining the code of oracles 
+    \item Inlining the code of oracles
     \item Renaming variables (in an injective way so that distinct variables are renamend to two distinct variables as well)
     \item Assigning an additional variable if that variable is not read
     \item Removing a variable assignment if that variable is not read
-    \item Move a line of code if the variables which appear in it do not appear in the code-lines in between the original and the final location of the code line   
+    \item Move a line of code if the variables which appear in it do not appear in the code-lines in between the original and the final location of the code line
 \end{itemize}
 This list is not exhaustive: there are other transformations you can use as well. However, if you use other transformations, you should justify why they have no effect on the input-output behaviour of the code.
 
@@ -17,17 +17,17 @@ Before we move on to describing and justifying these transformations, we should 
 
 The rest of this section is devoted to discussing the details of how to write proofs using such transformations. We use the algebraic notation which we introduced in Section~\ref{ssec:pseudocode-defs}.
 
-\paragraph{Inlining} 
+\paragraph{Inlining}
 When writing a code-equivalence proof, our first obstacle is often that the systems are defined in terms of package composition, and we cannot directly compare the code. To be able to compare the two systems, we first turn them into a single package with self-contained oracles. We do this by \emph{inlining}.
 Consider the simple package composition
-\[\M{M}\circ\M{N}\;\;\;\text{ or }\;\;\;\stackrel{\O{O}_1}{\longrightarrow}\M{M}\stackrel{\O{O}_2}{\longrightarrow}\M{N},\text{ 
-using graph-notation for the latter.}\]
+\[\M{M}\circ\M{N}\;\;\;\text{ or }\;\;\;\stackrel{\O{O}_1}{\longrightarrow}\M{M}\stackrel{\O{O}_2}{\longrightarrow}\M{N},\text{
+        using graph-notation for the latter.}\]
 There is some line of the form $y\gets\O{O}_2(x)$ in the code of $\O{O}_1$ since it calls the oracle $\O{O}_2$.
 Let us describe the code of oracle $\O{O}_2(x)$ in package $\M{N}$ generally as ``$\V{code}(x);\ \pcreturn z$''. Then, we can inline $\M{N}$ into $\M{M}$ by replacing, in the code of $\O{O}_1$, the line ``$y\gets\O{O}_2(x)$'' by ``$\V{code}(x);\ y\gets z$''. Inlining is useful to prove \emph{code equivalence} between a package composition $\M{M}\circ\M{N}$ and some other package $\M{P}$. We write this as
 \[\M{M}\circ\M{N}\stackrel{\text{code}}{\equiv}\M{P}\]
 
-We need to be careful when inlining, because some of the variable names might collide. Programming language theory has good methods to deal with situations like this, for example by first renaming each variable before inlining such that collisions in inlining are avoided, e.g., by 
- prepending each variable name by the name of the package. Since we are not doing formal computer science, we will simply be careful to avoid such clashes in variable names by using globally unique variable names in a package composition\footnote{This being said, if you notice any such clashes, let Chris or Valtteri know.} or by doing renaming in an ad-hoc fashion.
+We need to be careful when inlining, because some of the variable names might collide. Programming language theory has good methods to deal with situations like this, for example by first renaming each variable before inlining such that collisions in inlining are avoided, e.g., by
+prepending each variable name by the name of the package. Since we are not doing formal computer science, we will simply be careful to avoid such clashes in variable names by using globally unique variable names in a package composition\footnote{This being said, if you notice any such clashes, let Chris or Valtteri know.} or by doing renaming in an ad-hoc fashion.
 
 Another case that requires careful treatment is the \emph{parallel} compositions of packages. Essentially, one package can only ever be inlined into a \emph{single} other package. That is, if two packages $\M{L}$ and $\M{M}$ both make calls to a package $\M{N}$, then we first need to turn the $\M{L}$ and $\M{M}$ into a single package, denoted $\tfrac{\M{L}}{\M{M}}$ (see Section \ref{ssec:pseudocode-defs} for details on notation). In practice we simply write a package that contains all the oracles of packages $\M{L}$ and $\M{M}$. More formally, we have to define a package whose state contains the union of the state of $\M{L}$ and $\M{M}$ and which provides the oracles $\outinterface{\tfrac{\M{L}}{\M{M}}}:=\outinterface{\M{L}}\cup\outinterface{\M{M}}$. Note that this package is only well-defined if $\outinterface{\M{L}}\cap\outinterface{\M{M}}=\emptyset$. After joining $\M{L}$ and $\M{M}$ into $\tfrac{\M{L}}{\M{M}}$, we can now inline $\M{N}$ into $\tfrac{\M{L}}{\M{M}}$.
 
@@ -36,7 +36,7 @@ Recall the we discussed inlining as a tool for code equivalence proofs between p
 \paragraph{Code Rewriting}
 There rest of the transformations described in the beginning of this subsection are examples of \emph{code rewriting}. These are ways to change the code without altering its behaviour. First off, we have \emph{variable renaming}. This means replacing all occurrences of a variable-name $x$ in the code with a new variable-name. Since variable names are arbitrary, it doesn't affect behaviour to change them. There is one caveat: the new variable name has to be \emph{fresh}. This means that it doesn't occur anywhere in the code before the renaming.
 
-Next, there are two related transformations that add and remove code. We can \emph{assign an additional variable}, as long as the additional variable has a fresh name, this variable is never read and thus adding this code line does not behave the behavior of the system. The inverse of assigning an additional variable is \emph{removing a line of code}. We can do this, provided that the line assigns a variable that is not read anywhere else in the code: it then cannot affect the behaviour of the system. 
+Next, there are two related transformations that add and remove code. We can \emph{assign an additional variable}, as long as the additional variable has a fresh name, this variable is never read and thus adding this code line does not behave the behavior of the system. The inverse of assigning an additional variable is \emph{removing a line of code}. We can do this, provided that the line assigns a variable that is not read anywhere else in the code: it then cannot affect the behaviour of the system.
 
 The final transformation is \emph{moving a line of code} to an earlier or later position in the code. We can do this if the computations in between are \emph{independent} of the line being moved, meaning that they do not share any variables.
 

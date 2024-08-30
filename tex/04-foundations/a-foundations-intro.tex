@@ -1,6 +1,6 @@
 In cryptography, we want to make statements such as the following:
 \begin{quote}
-No adversary running in time at most $t$ can break the system with probability greater than $\epsilon$.
+    No adversary running in time at most $t$ can break the system with probability greater than $\epsilon$.
 \end{quote}
 
 There are many layers to this statement. You might just argue informally that a system is secure, without being precise about what you are trying to prove. We believe this is a bad approach, and is prone to mistakes. This document introduces a more formal way of dealing with security, which requires careful consideration of what security statements like the one above mean. We start off by discussing how we model security. We explain what exactly we mean by an adversary, what a cryptographic system is and what it means to break it. These concepts are useful on their own, but for a more thorough understanding we have to discuss more foundational issues. We borrow from computer science and mathematics to explain what we mean by algorithms, how we measure their run-time, and how we reason about probability. In addition, we elaborate on two topics in cryptography: the need for assumptions in proofs of security, and describing larger systems by composing modular packages.

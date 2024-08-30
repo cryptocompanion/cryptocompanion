@@ -1,25 +1,25 @@
 \section{Equivalent Notions of Advantage}\label{app:calculus}
 In this appendix, we prove the following claim:
 \begin{claim}
-It holds that
-\begin{equation*}
-2\cdot\tilde{\mathbf{Adv}}_\adv^{\M{G}^0,\M{G}^1}(\lambda)=\mathbf{Adv}_\adv^{\M{G}^0,\M{G}^1}(\lambda),
-\end{equation*}
-where
-\[\mathbf{Adv}_\adv^{\M{G}^0,\M{G}^1}(\lambda):=\abs{\prob{1 = \adv \circ \M{G}^0} - \prob{1 = \adv \circ \M{G}^1}}\]
-and
-\[\tilde{\mathbf{Adv}}_\adv^{\M{G}^0,\M{G}^1}(\lambda):=\abs{\probsub{b\sample\bin}{b = \adv \circ \M{G}^b} - \frac{1}{2}}.\]
+    It holds that
+    \begin{equation*}
+        2\cdot\tilde{\mathbf{Adv}}_\adv^{\M{G}^0,\M{G}^1}(\lambda)=\mathbf{Adv}_\adv^{\M{G}^0,\M{G}^1}(\lambda),
+    \end{equation*}
+    where
+    \[\mathbf{Adv}_\adv^{\M{G}^0,\M{G}^1}(\lambda):=\abs{\prob{1 = \adv \circ \M{G}^0} - \prob{1 = \adv \circ \M{G}^1}}\]
+    and
+    \[\tilde{\mathbf{Adv}}_\adv^{\M{G}^0,\M{G}^1}(\lambda):=\abs{\probsub{b\sample\bin}{b = \adv \circ \M{G}^b} - \frac{1}{2}}.\]
 \end{claim}
 \begin{proof}
-\begin{align*}
-\mathbf{Adv}_\adv^{\M{G}^0,\M{G}^1}(\lambda)\\
-=&\abs{\prob{1 = \adv \circ \M{G}^0} - \prob{1 = \adv \circ \M{G}^1}}\\
-=&\abs{\prob{1 = \adv \circ \M{G}^1}-\prob{1 = \adv \circ \M{G}^0}}\\
-=&\abs{-\prob{1 = \adv \circ \M{G}^0} + \prob{1 = \adv \circ \M{G}^1}}\\
-=&\abs{(1-\prob{1 = \adv \circ \M{G}^0}) + \prob{1 = \adv \circ \M{G}^1} - 1}\\
-=&2\cdot\abs{\frac{1}{2}\cdot (1-\prob{1 = \adv \circ \M{G}^0}) + \frac{1}{2}\cdot \prob{1 = \adv \circ \M{G}^1} - \frac{1}{2}}\\
-=&2\cdot\abs{\frac{1}{2}\cdot \prob{0 = \adv \circ \M{G}^0} + \frac{1}{2}\cdot \prob{1 = \adv \circ \M{G}^1} - \frac{1}{2}}\\
-=&2\cdot\abs{\probsub{b\sample\bin}{b = \adv \circ \M{G}^b} - \frac{1}{2}}\\
-=&2\cdot\tilde{\mathbf{Adv}}_\adv^{\M{G}^0,\M{G}^1}(\lambda)\\
-\end{align*}
+    \begin{align*}
+        \mathbf{Adv}_\adv^{\M{G}^0,\M{G}^1}(\lambda)                                                                                      \\
+        = & \abs{\prob{1 = \adv \circ \M{G}^0} - \prob{1 = \adv \circ \M{G}^1}}                                                           \\
+        = & \abs{\prob{1 = \adv \circ \M{G}^1}-\prob{1 = \adv \circ \M{G}^0}}                                                             \\
+        = & \abs{-\prob{1 = \adv \circ \M{G}^0} + \prob{1 = \adv \circ \M{G}^1}}                                                          \\
+        = & \abs{(1-\prob{1 = \adv \circ \M{G}^0}) + \prob{1 = \adv \circ \M{G}^1} - 1}                                                   \\
+        = & 2\cdot\abs{\frac{1}{2}\cdot (1-\prob{1 = \adv \circ \M{G}^0}) + \frac{1}{2}\cdot \prob{1 = \adv \circ \M{G}^1} - \frac{1}{2}} \\
+        = & 2\cdot\abs{\frac{1}{2}\cdot \prob{0 = \adv \circ \M{G}^0} + \frac{1}{2}\cdot \prob{1 = \adv \circ \M{G}^1} - \frac{1}{2}}     \\
+        = & 2\cdot\abs{\probsub{b\sample\bin}{b = \adv \circ \M{G}^b} - \frac{1}{2}}                                                      \\
+        = & 2\cdot\tilde{\mathbf{Adv}}_\adv^{\M{G}^0,\M{G}^1}(\lambda)                                                                    \\
+    \end{align*}
 \end{proof}

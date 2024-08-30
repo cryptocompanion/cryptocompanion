@@ -7,42 +7,42 @@ The number $1$ is interperted as meaning \emph{true}, and $0$ as meaning \emph{f
 
 There are some mathematical operations and shorthands we use. The most important are given in Table \ref{table:math}.
 \begin{table}
-\begin{tabular}{c | l}
-Notation & Meaning \\ \hline
-$A := b$ & $A$ is defined as being $b$ \\
-$A \cup B$ & The set containing all elements of sets $A$ and $B$ \\
-$A + x$ & Set containing all elements of $A$ and the new element $x$ \\
-$\{x : P(x)\}$ & The set of all $x$ such that $P(x)$ is true \\
-$a \in A$ & The element $a$ belongs to the set $A$ \\
-$S^n$ & The set of strings that can be formed by picking a letter $n$ times from $S$ \\
-$\bin^n$ & The set of bitstrings of length $n$ \\
-$\bin^*$ & The set of all bitstrings \\
-$1^n$ & Security parameter, i.e., $1...1$, a string with $n$ ones\\
-$\abs{S}$ & The number of elements in $S$ \\
-$\abs{x}$ & The length of a string $x$ \\
-$x||y$ & The concatenation of two strings $x$ and $y$ \\
-$x_{abc\cdots}$ & String of bits of $x$ at positions $a$, $b$, $c$, etc. ($0110_1 = 0$, $0110_{13}=01$) \\
-$x_{a \cdots b}$ & The substring of $x$ from position $a$ to $b$. ($0110_1 = 0$, $0110_{1 \cdots 3}=011$) \\
-$x\oplus y$ & The bitwise XOR of two strings $x$ and $y$ ($0110 \oplus 1010 = 1100$) \\
-$\binary(x)$ & The integer that the string $x$ represents in binary ($\binary(0011)$ = 3) \\ 
-$\wedge$ & and ($0 \wedge 1 = 0$, $1 \wedge 1 = 1$) \\
-$\vee$ & or ($0 \vee 1 = 1$, $1 \vee 1 = 1$)\\
-$f: A \to B$ & The function $f$ maps values from $A$ to values in $B$\\
-$A \times B$ & The set of all ordered pairs $(a,b)$ with $a \in A$, $b \in B$\\
-\end{tabular}
-\caption{Mathematical operations and shorthands}\label{table:math}
+  \begin{tabular}{c | l}
+    Notation         & Meaning                                                                                \\ \hline
+    $A := b$         & $A$ is defined as being $b$                                                            \\
+    $A \cup B$       & The set containing all elements of sets $A$ and $B$                                    \\
+    $A + x$          & Set containing all elements of $A$ and the new element $x$                             \\
+    $\{x : P(x)\}$   & The set of all $x$ such that $P(x)$ is true                                            \\
+    $a \in A$        & The element $a$ belongs to the set $A$                                                 \\
+    $S^n$            & The set of strings that can be formed by picking a letter $n$ times from $S$           \\
+    $\bin^n$         & The set of bitstrings of length $n$                                                    \\
+    $\bin^*$         & The set of all bitstrings                                                              \\
+    $1^n$            & Security parameter, i.e., $1...1$, a string with $n$ ones                              \\
+    $\abs{S}$        & The number of elements in $S$                                                          \\
+    $\abs{x}$        & The length of a string $x$                                                             \\
+    $x||y$           & The concatenation of two strings $x$ and $y$                                           \\
+    $x_{abc\cdots}$  & String of bits of $x$ at positions $a$, $b$, $c$, etc. ($0110_1 = 0$, $0110_{13}=01$)  \\
+    $x_{a \cdots b}$ & The substring of $x$ from position $a$ to $b$. ($0110_1 = 0$, $0110_{1 \cdots 3}=011$) \\
+    $x\oplus y$      & The bitwise XOR of two strings $x$ and $y$ ($0110 \oplus 1010 = 1100$)                 \\
+    $\binary(x)$     & The integer that the string $x$ represents in binary ($\binary(0011)$ = 3)             \\
+    $\wedge$         & and ($0 \wedge 1 = 0$, $1 \wedge 1 = 1$)                                               \\
+    $\vee$           & or ($0 \vee 1 = 1$, $1 \vee 1 = 1$)                                                    \\
+    $f: A \to B$     & The function $f$ maps values from $A$ to values in $B$                                 \\
+    $A \times B$     & The set of all ordered pairs $(a,b)$ with $a \in A$, $b \in B$                         \\
+  \end{tabular}
+  \caption{Mathematical operations and shorthands}\label{table:math}
 \end{table}
 
 The above provide most of the mathematical notation we will use in this course. Don't worry if this is unfamiliar: you can always return here if you forget what some notation means. The first place we will use the above notation is in the following definitions for probability.
 
-Let's start our definition of probability with an example. Take a function $f: \bin^n \rightarrow \bin$. Then the probability that ``$f(x)$ outputs 1 given a uniformly random bitstring of length n as input'' is written \(\probsub{x \sample \bin^n}{f(x) = 1}\). In the subscript $x \sample \bin^n$ we describe how the random input $x$ is chosen: it's taken from the set $\bin^n$, with every member of $\bin^n$ being equally likely to be chosen (this is what we mean by ``uniformly random''). 
+Let's start our definition of probability with an example. Take a function $f: \bin^n \rightarrow \bin$. Then the probability that ``$f(x)$ outputs 1 given a uniformly random bitstring of length n as input'' is written \(\probsub{x \sample \bin^n}{f(x) = 1}\). In the subscript $x \sample \bin^n$ we describe how the random input $x$ is chosen: it's taken from the set $\bin^n$, with every member of $\bin^n$ being equally likely to be chosen (this is what we mean by ``uniformly random'').
 
 To make our definition more general let's call the event we're interested in $P(x)$. Then the probability that $P(x)$ is true when $x$ is sampled uniformly at random from $S$ is \(\probsub{x \sample S}{P(x)}\). In the example above, $P(x)$ was the statement $f(x) = 1$ and $S$ the set $\bin^n$.
 
 Now we have the notation in place, but how do we calculate what the probability is? We count how many possible inputs there are, then for how many of these the event occurs, and then we divide the two numbers (see Section \ref{foundations:probability} for a more detailed discussion). For a concrete example, let's take the probability \(\probsub{x \sample \bin^n}{f(x) = 1}\) from above, and let $f(x) := \binary(x)$, $n := 5$. With these choices of $f$ and $n$ in place, we have
 \begin{align*}
   \probsub{x\sample \bin^n}{f(x)=1} & :=\frac{\abs{\{z:\  z\in\bin^n\ \wedge \ f(z)=1\}}}{\abs{\bin^n}} \\
-                                    & =\frac{\abs{\{z:\  z\in\bin^n\ \wedge \ f(z)=1\}}}{2^n} \\
-                                    & =\frac{1}{2^n} = \frac{1}{2^5} = \frac{1}{32} 
+                                    & =\frac{\abs{\{z:\  z\in\bin^n\ \wedge \ f(z)=1\}}}{2^n}           \\
+                                    & =\frac{1}{2^n} = \frac{1}{2^5} = \frac{1}{32}
 \end{align*}
 In the calculations above, we used the fact that $\abs{\{z:\  z\in\bin^n\ \wedge \ f(z)=1\}}$ is equal to 1. This is the case since $f(x)$ is 1 only if $x$ is the bitstring $00001$.

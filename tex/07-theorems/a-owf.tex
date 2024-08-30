@@ -1,127 +1,126 @@
 \subsection{Theorems on generic one-way function transformations}
 \begin{figure}
-\begin{codebox}
-	\begin{center}
-		\begin{pchstack}
-  		\begin{pcvstack}
-				  \procedure{$g^f_{\text{app-zer}}(x)$}{
+	\begin{codebox}
+		\begin{center}
+			\begin{pchstack}
+				\begin{pcvstack}
+					\procedure{$g^f_{\text{app-zer}}(x)$}{
 					y\gets f(x)||0^{\abs{x}}\\
 					\pcreturn y}
-				  \procedure{$g^f_{\text{app-ones}}(x)$}{
+					\procedure{$g^f_{\text{app-ones}}(x)$}{
 					y\gets f(x)||1^{\abs{x}}\\
 					\pcreturn y}
-  		\end{pcvstack}
-					\pchspace
-				  \procedure{$g^f_{\text{leak-l}}(x)$}{
-					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
-					x_\ell\gets x_{1..m}\\
-					x_r\gets x_{m+1..\abs{x}}\\					
-					y\gets x_\ell||f(x_r)\\
-					\pcreturn y}
-					\pchspace
-				  \procedure{$g^f_{\text{leak-r}}(x)$}{
-					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
-					x_\ell\gets x_{1..m}\\
-					x_r\gets x_{m+1..\abs{x}}\\					
-					y\gets f(x_\ell)||x_r\\
-					\pcreturn y}
-					\pchspace
-				  \procedure{$g^f_{\text{ign-l}}(x)$}{
-					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
-					\\
-					x_r\gets x_{m+1..\abs{x}}\\					
-					y\gets f(x_r)\\
-					\pcreturn y}
-					\pchspace
-				  \procedure{$g^f_{\text{ign-r}}(x)$}{
-					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
-					x_\ell\gets x_{1..m}\\
-					\\					
-					y\gets f(x_\ell)\\
-					\pcreturn y}
-		\end{pchstack}
-	\end{center}
+				\end{pcvstack}
+				\pchspace
+				\procedure{$g^f_{\text{leak-l}}(x)$}{
+				m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+				x_\ell\gets x_{1..m}\\
+				x_r\gets x_{m+1..\abs{x}}\\
+				y\gets x_\ell||f(x_r)\\
+				\pcreturn y}
+				\pchspace
+				\procedure{$g^f_{\text{leak-r}}(x)$}{
+				m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+				x_\ell\gets x_{1..m}\\
+				x_r\gets x_{m+1..\abs{x}}\\
+				y\gets f(x_\ell)||x_r\\
+				\pcreturn y}
+				\pchspace
+				\procedure{$g^f_{\text{ign-l}}(x)$}{
+				m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+				\\
+				x_r\gets x_{m+1..\abs{x}}\\
+				y\gets f(x_r)\\
+				\pcreturn y}
+				\pchspace
+				\procedure{$g^f_{\text{ign-r}}(x)$}{
+				m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+				x_\ell\gets x_{1..m}\\
+				\\
+				y\gets f(x_\ell)\\
+				\pcreturn y}
+			\end{pchstack}
+		\end{center}
 	\end{codebox}
-\caption{Generic transformations of one-way functions\label{fig:owf-transforms}}
+	\caption{Generic transformations of one-way functions\label{fig:owf-transforms}}
 \end{figure}
 We state basic properties of one-way functions. Namely, appending a zeroes or ones does not affect the one-wayness, leaking one half of the input does not affect the one-wayness and ignoring one half of the input does also not affect the one-wayness. Since parsing concatenation of one-way functions can be cumbersome, in the following, we will always start with a one-way function $f:\bin^*\rightarrow\bin^*$
 
 
 \begin{theorem}[Appending zeroes or ones]\label{thm:owf-app-zer}
-If $f$ is a one-way function, then $g^f_{\text{app-zer}}$ and $g^f_{\text{app-ones}}$ are one-way functions. See Figure~\ref{fig:owf-transforms} for the definition of $g^f_{\text{app-zer}}$ and $g^f_{\text{app-ones}}$.
+	If $f$ is a one-way function, then $g^f_{\text{app-zer}}$ and $g^f_{\text{app-ones}}$ are one-way functions. See Figure~\ref{fig:owf-transforms} for the definition of $g^f_{\text{app-zer}}$ and $g^f_{\text{app-ones}}$.
 \end{theorem}
 \begin{theorem}[Leaking one half]
-If $f$ is a one-way function, then $g^f_{\text{leak-l}}$ and $g^f_{\text{leak-r}}$ are one-way functions. See Figure~\ref{fig:owf-transforms} for the definition of $g^f_{\text{leak-l}}$ and $g^f_{\text{leak-r}}$.
+	If $f$ is a one-way function, then $g^f_{\text{leak-l}}$ and $g^f_{\text{leak-r}}$ are one-way functions. See Figure~\ref{fig:owf-transforms} for the definition of $g^f_{\text{leak-l}}$ and $g^f_{\text{leak-r}}$.
 \end{theorem}
 \begin{theorem}[Ignoring one half]
-If $f$ is a one-way function, then $g^f_{\text{ign-l}}$ and $g^f_{\text{ign-r}}$ are one-way functions. See Figure~\ref{fig:owf-transforms} for the definition of $g^f_{\text{ign-l}}$ and $g^f_{\text{ign-r}}$.
+	If $f$ is a one-way function, then $g^f_{\text{ign-l}}$ and $g^f_{\text{ign-r}}$ are one-way functions. See Figure~\ref{fig:owf-transforms} for the definition of $g^f_{\text{ign-l}}$ and $g^f_{\text{ign-r}}$.
 \end{theorem}
 We sometimes discuss length-preserving one-way functions, and in this case, we might want to consider variants of the above constructions which are length-preserving. We list some of these constructions below.
 \begin{theorem}[Appending some zeroes or ones]
-If $f$ is a one-way function with an output length function $\O{out}:\NN\rightarrow\NN$ such that $\forall x\in\bin^* \abs{f(x)}=\O{out}(\abs{x})$ and such that $\O{out}(n)\leq n$, then $g^f_{\text{app-some-zer}}$ and $g^f_{\text{app-some-ones}}$ are one-way functions. See Figure~\ref{fig:owf-transforms-lp} for their definition.
+	If $f$ is a one-way function with an output length function $\O{out}:\NN\rightarrow\NN$ such that $\forall x\in\bin^* \abs{f(x)}=\O{out}(\abs{x})$ and such that $\O{out}(n)\leq n$, then $g^f_{\text{app-some-zer}}$ and $g^f_{\text{app-some-ones}}$ are one-way functions. See Figure~\ref{fig:owf-transforms-lp} for their definition.
 \end{theorem}
 \begin{theorem}[Ignoring one half and appending zeroes or ones]
-If $f$ is a one-way function with an output length function $\O{out}:\NN\rightarrow\NN$ such that $\forall x\in\bin^* \abs{f(x)}=s(\abs{x})$ and such that $\O{out}(n)\leq n$, then
-\[g^f_{\text{ign-l-app-zer}},\;
-  g^f_{\text{ign-l-app-ones}},\;
-  g^f_{\text{ign-r-app-zer}}\text{ and }
-  g^f_{\text{ign-r-app-ones}}\]
-are \emph{length-preserving} one-way functions. See Figure~\ref{fig:owf-transforms-lp} for their definition.
+	If $f$ is a one-way function with an output length function $\O{out}:\NN\rightarrow\NN$ such that $\forall x\in\bin^* \abs{f(x)}=s(\abs{x})$ and such that $\O{out}(n)\leq n$, then
+	\[g^f_{\text{ign-l-app-zer}},\;
+		g^f_{\text{ign-l-app-ones}},\;
+		g^f_{\text{ign-r-app-zer}}\text{ and }
+		g^f_{\text{ign-r-app-ones}}\]
+	are \emph{length-preserving} one-way functions. See Figure~\ref{fig:owf-transforms-lp} for their definition.
 \end{theorem}
 
 \begin{figure}
-\begin{codebox}
-	\begin{center}
-    \begin{pcvstack}
-		\begin{pchstack}
+	\begin{codebox}
+		\begin{center}
+			\begin{pcvstack}
+				\begin{pchstack}
 					\procedure{$g^f_{\text{app-some-zer}}(x)$}{
 					n\gets \abs{x}-\abs{f(x)}\\
 					y\gets f(x)||0^n\\
 					\pcreturn y}
 					\pchspace
-				  \procedure{$g^f_{\text{ign-l-app-zer}}(x)$}{
+					\procedure{$g^f_{\text{ign-l-app-zer}}(x)$}{
 					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
 					\\
-					x_r\gets x_{m+1..\abs{x}}\\					
+					x_r\gets x_{m+1..\abs{x}}\\
 					n\gets \abs{x}-\abs{f(x_r)}\\
 					y\gets f(x_r)||0^n\\
 					\pcreturn y}
 					\pchspace
-				  \procedure{$g^f_{\text{ign-r-app-zer}}(x)$}{
+					\procedure{$g^f_{\text{ign-r-app-zer}}(x)$}{
 					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
 					x_\ell\gets x_{1..m}\\
-					\\					
+					\\
 					n\gets \abs{x}-\abs{f(x_\ell)}\\
 					y\gets f(x_\ell)||0^n\\
 					\pcreturn y}
-		\end{pchstack}
-		\pcvspace
-							\procedure{$g^f_{\text{app-some-ones}}(x)$}{
-					n\gets \abs{x}-\abs{f(x)}\\
-					y\gets f(x)||1^n\\
-					\pcreturn y}
-					\pchspace
-				  \procedure{$g^f_{\text{ign-l-app-ones}}(x)$}{
-					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
-					\\
-					x_r\gets x_{m+1..\abs{x}}\\					
-					n\gets \abs{x}-\abs{f(x_r)}\\
-					y\gets f(x_r)||1^n\\
-					\pcreturn y}
-					\pchspace
-				  \procedure{$g^f_{\text{ign-r-app-ones}}(x)$}{
-					m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
-					x_\ell\gets x_{1..m}\\
-					\\					
-					n\gets \abs{x}-\abs{f(x_\ell)}\\
-					y\gets f(x_\ell)||1^n\\
-					\pcreturn y}
-    \end{pcvstack}
-	\end{center}
+				\end{pchstack}
+				\pcvspace
+				\procedure{$g^f_{\text{app-some-ones}}(x)$}{
+				n\gets \abs{x}-\abs{f(x)}\\
+				y\gets f(x)||1^n\\
+				\pcreturn y}
+				\pchspace
+				\procedure{$g^f_{\text{ign-l-app-ones}}(x)$}{
+				m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+				\\
+				x_r\gets x_{m+1..\abs{x}}\\
+				n\gets \abs{x}-\abs{f(x_r)}\\
+				y\gets f(x_r)||1^n\\
+				\pcreturn y}
+				\pchspace
+				\procedure{$g^f_{\text{ign-r-app-ones}}(x)$}{
+				m\gets \left\lfloor{\tfrac{\abs{x}}{2}}\right\rfloor\\
+				x_\ell\gets x_{1..m}\\
+				\\
+				n\gets \abs{x}-\abs{f(x_\ell)}\\
+				y\gets f(x_\ell)||1^n\\
+				\pcreturn y}
+			\end{pcvstack}
+		\end{center}
 	\end{codebox}
-\caption{Generic transformations of one-way functions which yield length-preserving outputs.\label{fig:owf-transforms-lp}}
+	\caption{Generic transformations of one-way functions which yield length-preserving outputs.\label{fig:owf-transforms-lp}}
 \end{figure}
-	
 
 
-	
+

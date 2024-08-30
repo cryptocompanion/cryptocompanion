@@ -3,8 +3,8 @@
 It has been asked: How to we come up with reductions? How do we knwo whether we need one or two reductions? Our own recipe for this is as follows. Say, we want to reduce the indistinguishability of two big games $\M{Gbig}^0$ and $\M{Gbig}^1$ to the indistinghuishability of two small games $\M{Gsmall}^0$ and $\M{Gsmall}^1$. The first thing we try is to come up with a reduction $\mathcal{R}$ such that the following two hold:
 
 \begin{align}
-\label{eqn:smallbig0}&\mathcal{R}\rightarrow\M{Gsmall}^0\stackrel{\text{code}}{\equiv}\M{Gbig}^0\\
-\label{eqn:smallbig1}&\mathcal{R}\rightarrow\M{Gsmall}^1\stackrel{\text{code}}{\equiv}\M{Gbig}^1
+    \label{eqn:smallbig0} & \mathcal{R}\rightarrow\M{Gsmall}^0\stackrel{\text{code}}{\equiv}\M{Gbig}^0 \\
+    \label{eqn:smallbig1} & \mathcal{R}\rightarrow\M{Gsmall}^1\stackrel{\text{code}}{\equiv}\M{Gbig}^1
 \end{align}
 
 If we can manage to find such an $\rdv$, then this is great, because from (\ref{eqn:smallbig0}) and (eqn:smallbig1), we can directly derive that the advantage of an adversary $\mathcal{A}$ in distinguishing between $\M{Gsmall}^0$ and $\M{Gsmall}^1$ is upper bounded by the advantage of the (composed) adversary $\mathcal{A}\rightarrow\mathcal{R}$ in distinguishing between $\M{Gbig}^0$ and $\M{Gbig}^1$. If we can find a reduction $\rdv$ such that (\ref{eqn:smallbig0}) and (eqn:smallbig1) holds, then we typically find it by looking at the construction whose security we model and our reduction mimics the behaviour of the construction---we call this a reduction-analogous-construction (CAR).
@@ -12,8 +12,8 @@ If we can manage to find such an $\rdv$, then this is great, because from (\ref{
 However, if we can't find a reduction such that  (\ref{eqn:smallbig0}) and (eqn:smallbig1) holds, then we need more than one reduction. In this case, we typically come up with two reductions $\mathcal{R}_0$ and $\mathcal{R}_1$ such that:
 
 \begin{align}
-\label{eqn:smallbig00}&\mathcal{R}_0\rightarrow\M{Gsmall}^0\stackrel{\text{code}}{\equiv}\M{Gbig}^0\\
-\label{eqn:smallbig11}&\mathcal{R}_1\rightarrow\M{Gsmall}^0\stackrel{\text{code}}{\equiv}\M{Gbig}^1
+    \label{eqn:smallbig00} & \mathcal{R}_0\rightarrow\M{Gsmall}^0\stackrel{\text{code}}{\equiv}\M{Gbig}^0 \\
+    \label{eqn:smallbig11} & \mathcal{R}_1\rightarrow\M{Gsmall}^0\stackrel{\text{code}}{\equiv}\M{Gbig}^1
 \end{align}
 
 Now, we are not done yet, we still need to compare $\mathcal{R}_0\rightarrow\M{Gsmall}^1$ and $\mathcal{R}_1\rightarrow\M{Gsmall}^1$ (observe that now the bit is $$1$$ in the games) and somehow argue/prove/explain that every adversary can distinguish them only with negligible probability.
