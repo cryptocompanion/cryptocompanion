@@ -104,18 +104,16 @@ A message authentication code (MAC) is meant to make sure that messages are not 
   The property UNF-CMA stands for \underline{unf}orgeable under \underline{c}hosen \underline{m}essage \underline{a}ttacks. It guarantees that an adversary cannot forge a message-tag pair, even when it is allowed to choose for which messages MAC tags are created.
 \end{remark}
 
-\begin{remark} In the literature, our notion of unforgeability under chosen message attacks is often referred to
-  as \emph{strong} unforgeability under chosen message attack. The weaker notion of unforgeability (in the exercises, we
-  refer to it as \emph{weak} unforgeability) makes it harder for the adversary to win. Namely, in our notion, it suffices
-  if $(\O{MAC}, x^*,t^*)\notin \mathcal{Q}$ and $(\O{VER}, (x^*,t^*),1)\in \mathcal{Q}$. In turn, in the weaker notion
+\begin{remark}
+  In the literature, our UNF-CMA notion is typically referred to as \emph{strong} unforgeability, since a weaker notion of unforgeability used to be popular: It only considered an adversary as successful if the message $m$ in the forgery was fresh, while our notion of unforgeability also considers the adversary successful when $m$ is the same as in the previous queries as long as the tag $t$ is different. This weaker notion of unforgeability, however, is more cumbersome to work with since it allows the adversary to potentially modify the tag. In addition, a MAC is typically constructed simply by using a PRF to generate MAC tags and verification is implemented as equality check. Thus, the weak unforgeability notion neither reflects the properties of real-life contructions, nor is convenient to work with. Thus, we are of the opinion that the notion formerly known as \emph{strong} UNF-CMA should become the new standard notion of UNF-CMA, and we refer to the other notion as \emph{weak} unforgeability.
+
+Let us elaborate a bit more on the differences between these two notions of unforgeability. The weaker notion of unforgeability (in the exercises, we refer to it as \emph{weak} unforgeability) makes it harder for the adversary to win. Namely, in our notion, it suffices if $(\O{MAC}, x^*,t^*)\notin \mathcal{Q}$ and $(\O{VER}, (x^*,t^*),1)\in \mathcal{Q}$. In turn, in the weaker notion
   of unforgeability, we have $\not\exists t':(\O{MAC}, x^*,t')\in \mathcal{Q}$ and $(\O{VER}, (x^*,t^*),1)\in \mathcal{Q}$,
   i.e., if $x^*$ is already in the list of $\O{MAC}$ queries, then the adversary is not allowed to use $x^*$. On the one
-  hand, this might seem intuitive, since it only ensures the integrity of the message while it's okay if the attacker
+  hand, this might seem intuitive, since it only ensures the integrity of the \emph{message} while it's okay if the attacker
   modifies the tag. On the other hand, it seems more robust if the adversary is not allowed to modify anything at all.
   Both definitions are reasoneable approaches to capturing unforgeability. The reason that we opted to use the
-  stronger variant in this course is that (a) the stronger variant is needed to imply AE-security (see Section~\ref{ssec:enc-definition}
-  for the definition of AE security and Section~\ref{section:theorems} for the Theorem) and (b) that most schemes actually
-  achieve the stronger variant. Namely, as we will see in Section~\ref{section:theorems}, the easiest way to build a MAC
+  stronger variant in this course is that (a) the stronger variant is needed to imply AE-security (see Section~\ref{ssec:enc-definition} for the definition of AE security and Section~\ref{section:theorems} for the Theorem) and (b) that most schemes actually achieve the stronger variant. Namely, as we will see in Section~\ref{section:theorems}, the easiest way to build a MAC
   is to implement $\m.\mac(k,x)$ as $f(k,x)$ for a PRF $f$ and to implement $\m.\ver(k,x,t)$ by re-computing $f(k,x)$ and
   checking whether it is equal to $t$.
 \end{remark}
@@ -124,6 +122,3 @@ A message authentication code (MAC) is meant to make sure that messages are not 
   Conceptually, UNF-CMA security is a \emph{search game}, since the only way for the adversary to distinguish the real and the ideal game is by finding a valid MAC tag. Indeed, it is more common in the literature to define UNF-CMA as a search game, where the adversary wins if it is able find a fresh valid message-tag pair. See Section~\ref{app:MAC} for a search game formulation.
 \end{remark}
 
-\begin{remark}
-  In the literature, our UNF-CMA notion is typically referred to as \emph{strong} unforgeability, since a weaker notion of unforgeability used to be popular: It only considered an adversary as successful if the message $m$ in the forgery was fresh, while our notion of unforgeability also considers the adversary successful when $m$ is the same as in the previous queries as long as the tag $t$ is different. This weaker notion of unforgeability, however, is more cumbersome to work with since it allows the adversary to potentially modify the tag. In addition, a MAC is typically constructed simply by using a PRF to generate MAC tags and verification is implemented as equality check. Thus, the weak unforgeability notion neither reflects the properties of real-life contructions, nor is convenient to work with. Thus, we are of the opinion that the notion formerly known as \emph{strong} UNF-CMA should become the new standard notion of UNF-CMA.
-\end{remark}

@@ -74,12 +74,14 @@ Sometimes, we want to make a particular parameter of a game explicit. In this ca
 
 We want to let an adversary $\adv$ interact with a game $\M{G}$, i.e., the adversary $\adv$ is the \emph{main procedure} which makes calls to $\M{G}$ and, in the end, $\adv$ returns a bit $b$ (more on this later). We write $\adv\rightarrow\M{G}$ for the composed process of the adversary $\adv$, composed with the game $\M{G}$.
 Since our algorithms can be randomized, entire games can be as well. The probability that an adversary ($\adv$) outputs a certain values when interacting with a system ($\M{G}$) comes up often. If both $\adv$ and $\M{G}$ were deterministic, $\adv \circ \M{G}$ would represent the value that $\adv$ returns. Similarly
-\[\prob{\adv \circ \M{G} = 1}\]
+\[\prob{1 = \adv \circ \M{G}}\]
 represent the probability that $\adv$ returns $1$ when interacting with $\M{G}$.
 
 We call algorithms that are polynomial-time (see Section~\ref{ssec:runtime}) and randomized \emph{probabilistic polynomial-time} or \emph{PPT} algorithms.
 
-As shortly discussed in Section~\ref{ssec:security-foundations} in the paragraph on security games, one can capture the security of cryptographic systems in different ways. One of them considers whether the system is computationally indistinguishable from a perfect system, and the other whether there is some information that is hard for the adversary to obtain. We call these \emph{decision} and \emph{search} games. As it turns out, search games can always be formulated as decision games, but it remains the case that some systems are easier to describe as search games---however, we only discuss search games informally and specify security of all primitives as decision games, see Section~\ref{sssec:decision-games}.
+As shortly discussed in Section~\ref{ssec:security-foundations} in the paragraph on security games, one can capture the security of cryptographic systems in different ways. One of them considers whether the system is computationally indistinguishable from a perfect system, and the other whether there is some information that is hard for the adversary to obtain. We call these \emph{decision} and \emph{search} games. Decision games are games where the 
+adversary needs to interact with a game and then decide between two possible options of what this game might have been. In turn, in a search games, the adversary is tasked with finding certain values. As it turns out, most search games
+can be formulated as decision games, but it remains the case that some systems are easier to describe as search games---however, we only discuss search games informally and specify security of all primitives as decision games, see Section~\ref{sssec:decision-games} for the definition of decision games and Appendix~\ref{app:search} for examples of search games as well as a discussion why focussing on decision games is (mostly) without loss of generality (and convenient).
 
 \subsubsection{The security parameter}\label{sssec:security-parameter}
 In cryptographic systems, there is often some parameter which can be changed to improve security. The simplest and most common example is a key: the longer the key, the harder the system should be to break.

@@ -1,5 +1,5 @@
 \newpage
-\subsection{Symmetric encryption (SE)}\label{ssec:enc-definition}
+\subsection{Symmetric encryption (SE)}\label{ssec:enc-definition}\label{ssec:SE}
 A symmetric encryption (SE) scheme is meant to encrypt messages using a symmetric key, meaning a key that is posessed by both the sender and receiver. A SE scheme consist of two tasks: encrypting and decrypting messages. The task of the encryption algorithm is to take an input string and produce a ciphertext based on a secret key. The task of the decryption algorithm is to use the same secret key to decrypt the message.
 
 \begin{syntax}[Syntax of a Symmetric Encryption Scheme (SE)]
@@ -13,8 +13,16 @@ A symmetric encryption (SE) scheme is meant to encrypt messages using a symmetri
 	i.e. when a ciphertext is created using the encryption algorithm, the decryption always returns the original message
 \end{syntax}
 
-\begin{remark}
-	The correctness criterion defines a necessary property of a symmetric encryption scheme, but that property is not enough. Without a security definition, it might be easy to decrypt the ciphertext without knowing the secret key. In this section, we define IND-CPA security. This means that ciphertexts for the plaintexts should be computationally indistinguishable (IND) from ciphertexts produced for a random string, when the adversary is allowed to carry out a chosen message attack (CPA). IND-CPA models confidentiality. In a IND-CPA secure SE scheme, the messages cannot be read by an adversary. There is a second property we might want from a symmetric encryption sheme: authentication. This means that the adversary cannot forge messages that look like they were encrypted by someone in possession of the private key. The combination of these two properties is called authenticated encryption (AE), which we also define in this section.
+\begin{remark}\label{rmk:IND-CPA}
+	The correctness criterion defines a necessary property of a symmetric encryption scheme, but that property is not enough. Without a security definition, it might be easy to decrypt the ciphertext without knowing the secret key. In this section, we formalize \emph{confidentiality},
+	i.e., that a ciphertext does not leak information about a plaintext except for its length---leaking the length is somewhat unavoidable because
+	longer messages require longer ciphertexts information-theoretically, and so, while padding messages to a longer message might make it
+	possible to hide the \emph{exact} length of a message, at least some upper bound about the message length is always leaked.
+
+	Defining confidentiatlity formally is not straightforward. We want to say that a ciphertexts leaks \emph{no} information about the plaintext
+	(except for its length). Our definition will capture this by saying that ciphertexts for the plaintexts should be indistinguishable from ciphertexts which were produced without any knowledge of the plaintext (except for its length). This captures confidentiality since it means that the ciphertexts that the adversary gets can be replaced by values which do not depend on the plaintext at all and can thus not leak information about it. Concretely, we formalize confidentiality as \emph{indistinguishability under chosen plaintext attacks} (IND-CPA) which captures that encryptions of a message $x$ should be indistinguishable from encryptions of the message $0^{\abs{x}}$ (which only depends on the length of $x$, but not on anything else).
+	
+	In addition to confidentiality (which is the core property of an encryption scheme), we might want another property from a symmetric encryption scheme: authentication. This means that the adversary cannot forge ciphertexts that look like they come from someone in possession of the private key. The combination of these two properties is called authenticated encryption (AE), which we also define in this section.
 \end{remark}
 
 \begin{security}[IND-CPA]

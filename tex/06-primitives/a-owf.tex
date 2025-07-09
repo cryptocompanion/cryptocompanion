@@ -16,16 +16,14 @@ One-way functions are not as natural to define in terms of distinguishing games 
 			x\sample\bin^\lambda\\
 			y\gets f(x)\\
 			x'\sample\adv(1^\lambda,y)\\
-			\pcif \abs{x'}\neq\lambda:\\
-			\pcind \pcreturn 0\\
-			\pcif f(x')=y:\\
-			\pcind \pcreturn 1\\
+			\pcif \abs{x'}\neq\lambda: \pcreturn 0\\
+			\pcif f(x')=y: \pcreturn 1\\
 			\pcreturn 0}
 	\end{center}
 	A (deterministic) function $f$ is one-way if for all PPT adversaries $\adv$ the probability $\mathsf{Win}^{\mathsf{ow}}_{f,\adv}(1^\lambda):=\prob{1={\mathsf{Exp}}_{f,\adv}^{\mathsf{ow}}(1^\lambda)}$ is negligible in $\lambda$.
 \end{security}
 
-\begin{security}[OW]
+\begin{security}[OW]\label{def:OWF}
 	Let $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ be the games
 	\begin{codebox}
 		\begin{center}
@@ -40,7 +38,6 @@ One-way functions are not as natural to define in terms of distinguishing games 
 					}
 					\pcvspace
 					\procedure{Package State}{
-						x\text{:} \< \quad \text{random value}\\
 						y\text{:} \< \quad \text{image value}
 					}
 					\pcvspace
@@ -50,14 +47,12 @@ One-way functions are not as natural to define in terms of distinguishing games 
 						y \gets f(x)\\
 						\pcreturn y}
 					\pcvspace
-					\procedure{$\O{CHECK}(x)$}{
-						\pcif \abs{x}\neq\lambda:\\
+					\procedure{$\O{CHECK}(x^*)$}{
+						\pcif \abs{x^*}\neq\lambda:\\
 						\pcind \pcreturn 0\\
-						y' \gets f(x) \\
-						\pcif y=y': \\
-						\pcind	\pcreturn 1 \\
-						\pcelse \\
-						\pcind	\pcreturn 0 \\
+						y' \gets f(x^*) \\
+						\pcif y=y': \pcreturn 1 \\
+						\pcelse \pcreturn 0 \\
 					}
 				\end{pcvstack}
 				\pchspace
@@ -70,7 +65,6 @@ One-way functions are not as natural to define in terms of distinguishing games 
 					}
 					\pcvspace
 					\procedure{Package State}{
-						x\text{:} \< \quad \text{random value}\\
 						y\text{:} \< \quad \text{image value}
 					}
 					\pcvspace
@@ -80,9 +74,7 @@ One-way functions are not as natural to define in terms of distinguishing games 
 						y \gets f(x)\\
 						\pcreturn y}
 					\pcvspace
-					\procedure{$\O{CHECK}(x)$}{
-						\\
-						\\
+					\procedure{$\O{CHECK}(x^*)$}{
 						\\
 						\\
 						\\
@@ -134,5 +126,12 @@ One-way functions are not as natural to define in terms of distinguishing games 
 		\end{center}
 		\end{codebox}
 	\fi
-	A one-way function $f$ is OW-secure if the real and ideal games $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ are computationally indistinguishable.
+
+	A polytime computable computable function $f$ is \emph{one-wayt} 
+	if the games $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ are
+	computationally indistinguishable, i.e., 
+	for all PPT adversaries $\adv$ the difference
+	\[ \big|\prob{1 = \adv\rightarrow \textsf{Gowf}_f^0}
+	  - \prob{1 = \adv\rightarrow \textsf{Gowf}_f^1}\big| \]
+	is negligible in $\lambda$.
 \end{security}

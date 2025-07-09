@@ -111,7 +111,7 @@ need an \emph{encoding} scheme which encodes messages into a multiple of the blo
         \pcparse (k_\m,k_\se)\gets k\\
         \pcparse (c',\tau)\gets c\\
         m\gets\se.\dec(k_\se,c')\\
-        \pcif 1\gets\verify(k_\m,c',\tau)\ \pcreturn m\\
+        \pcif 1=\verify(k_\m,c',\tau)\: \pcreturn m\\
         \pcelse \pcreturn \bot
       }
     \end{pchstack}

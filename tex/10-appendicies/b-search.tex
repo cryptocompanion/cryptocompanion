@@ -1,0 +1,187 @@
+\section{Search Games}\label{app:search}
+In this appendix, we define search games (Appendix~\ref{app:search:def}), provide examples of search games (Appendix~\ref{app:search:examples}), discuss why/when we find using decision games and search games convenient (Appendix~\ref{app:search:usability}) and why restricting ourselves to decision games is (mostly) without loss of generality (Appendix~\ref{app:search:discussion}). This appendix is somewhat advanced material in the sense that it references content beyond the
+current scope of this document.
+
+\subsection{Defining Search Games}\label{app:search:def}
+Recall (cf. Section~\ref{ssec:security-games}) that a search game captures that it is hard to \emph{find} certain values.
+To define a search game formally, we will have a game $\mathsf{Game}$ (in the sense of Section~\ref{ssec:security-games})
+together with a \emph{winning condition} $\mathsf{WinCond}$
+which is evaluated on the adversary's output $\mathsf{out}$ and the game's state and paramters. That is, unlike for decision games,
+the adversary does not need to return a bit anymore, but can return something arbitrary, for example a string $x^*$ as a
+candidate pre-image for the one-wayness game (cf. first example in Section~\ref{app:search:examples}) or a pair $(x^*,t^*)$ of
+a message $x^*$ and a tag $t^*$ for the unforgeability game for MACs (cf. 2nd example in Section~\ref{app:search:examples}),
+and the winning condition decides whether this output makes the adversary win, e.g., whether $x^*$ is a pre-image of $y$
+under the one-way function $f$, or whether $(x^*,t^*)$ is a fresh message-tag pair, i.e., one that the unforgeability game
+has not stored in its list $\mathcal{L}$ yet.
+
+Given a pair $(\mathsf{Game},\mathsf{WinCond})$, we then demand that for all PPT adversaries $\adv$, the winning probability
+\[\probsub{\adv\rightarrow\mathsf{Game}}{\mathsf{WinCond}(\mathsf{out},\mathsf{state})=1},\]
+is negligible, where $\mathsf{out}$ is the adversary's $\adv$ output in the end of the interaction $\adv\rightarrow\mathsf{Game}$ and $\mathsf{state}$ is the state of game $\mathsf{Game}$ in the end of the interaction
+between the adversary $\adv$ with the game $\mathsf{Game}$ as well as the game's parameters.
+
+\subsection{Examples of Search Games}\label{app:search:examples} As concrete examples of the aforementioned framework for defining search games, let us define one-wayness as a search game as well as unforgeability under chosen message attacks (UNF-CMA) for message authentication codes.
+
+\begin{wrapfigure}{R}{0.215\textwidth}
+\vspace{-0.7cm}
+				\begin{pchstack}
+\pchspace
+				\begin{pcvstack}
+					\underline{\underline{$\textsf{Gowf}_f$}}\\
+					\\
+					\procedure{Package Param.}{
+						\lambda\text{:} \< \quad \text{security par.}\\
+						f\text{:} \< \quad \text{function}
+					}
+					\pcvspace
+					\procedure{Package State}{
+						y\text{:} \< \quad \text{image value}
+					}
+					\pcvspace
+					\procedure{$\O{SAMPLE}()$}{
+						\pcassert y = \bot\\
+						x \sample \bin^\lambda\\
+						y \gets f(x)\\
+						\pcreturn y}
+				\end{pcvstack}
+				\end{pchstack}
+\vspace{-0.3cm}
+\caption{\label{fig:search:owf}}
+\vspace{-2cm}
+\end{wrapfigure}
+
+\paragraph{Search game for One-Way Functions.} We now re-phrase the distinguishing game provided in Definition~\ref{def:OWF} as a search game, i.e., we define a (single) game $\textsf{Gowf}_f$ (cf. Fig.~\ref{fig:search:owf}) with an oracle $\O{SAMPLE}$ that is analogous to oracle 
+$\O{SAMPLE}$ in the games $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ in Definition~\ref{def:OWF}. However, the search game $\textsf{Gowf}_f$ has no $\O{CHECK}$ oracle, and instead, this check takes place in the following winning condition which takes as input the output $x^*$ of the adversary and the game state $y$ as well as the game's parameters $\lambda$ and $f$:
+
+\medskip
+
+\hspace{1cm}\procedure{$\mathsf{WinCond}_f^\mathsf{OW}(x^*,y,\lambda,f)$}
+{\pcif y=\bot: x\sample\bin^\lambda;\,y\gets f(x)\\
+\pcif y=f(x^*)\text{ and }\abs{x^*}=\lambda: \pcreturn 1\\
+\pcelse \pcreturn 0
+}
+
+\medskip
+\noindent
+Now, f is a OW-secure if for all PPT adversaries
+\[\probsub{\adv\rightarrow\mathsf{Gowf}_f}{\mathsf{WinCond}_f^\mathsf{OW}(x^*,y,\lambda,f)=1}\]
+is negligible, where $x^*$ is the adversary's $\adv$ output in the end of the interaction $\adv\rightarrow\textsf{Gowf}_f$ and $y$ is the value of $y$ in the state of game $\mathsf{Gowf}_f$ in the end of the interaction
+between the adversary $\adv$ with the game $\mathsf{Gowf}_f$, and $\lambda$ and $f$ are the parameters of $\mathsf{Gowf}_f$.
+
+\begin{wrapfigure}{R}{0.215\textwidth}
+\vspace{-0.7cm}
+				\begin{pchstack}
+\pchspace
+				\begin{pcvstack}
+          \underline{\underline{$\M{Gunf\text{-}cma}_\m$}}\\
+          \\
+          \procedure{Package Param.}{
+            \lambda\text{:} \< \quad \text{security par.}\\
+            \m\text{:} \< \quad \text{MAC scheme}
+          }
+          \pcvspace
+          \procedure{Package State}{
+            k\text{:} \< \quad \text{key} \\
+            \mathcal{L}\text{:} \< \quad \text{list}
+          }
+          \pcvspace
+          \procedure{$\O{MAC}(x)$}{
+            \pcif k=\bot:\\
+            \pcind k\sample\bin^\lambda\\
+            t\gets \m.\mac(k,x)\\
+            \mathcal{L}\gets\mathcal{L}\cup\{(x,t)\}\\
+            \pcreturn t}
+          \pcvspace
+          \procedure{$\O{VERIFY}(x,t)$}{
+            \pcassert t\neq\bot\\
+            \pcif (x,t)\in\mathcal{L}:\\
+            \pcind\pcreturn 1\\
+            \pcreturn 0}
+        \end{pcvstack}
+				\end{pchstack}
+\vspace{-0.3cm}
+\caption{\label{fig:search:unfcma}}
+\vspace{-2cm}
+\end{wrapfigure}
+
+
+\paragraph{Search game for UNF-CMA of MACs.} We now re-phrase the distinguishing game provided in Definition~\ref{def:UNF-CMA} as a search game, i.e., we define a (single) game $\M{Gunf\text{-}cma}_\m$ (cf. Fig.~\ref{fig:search:unfcma}) with an oracle $\O{MAC}$ that is analogous to oracle 
+$\O{MAC}$ in the games $\textsf{Gowf}_f^0$ and $\textsf{Gowf}_f^1$ in Definition~\ref{fig:search:unfcma}. Note that $\O{MAC}$ now stores the pairs $(x,t)$ in list $\mathcal{L}$, but the list $\mathcal{L}$ does not affect oracle behaviour. Moreover, the game
+$\M{Gunf\text{-}cma}_\m$ has a $\O{VERIFY}$ oracle which behaves as the $\O{VERIFY}$ oracle in the real game 
+$\textsf{Gowf}_f^0$ in Definition~\ref{fig:search:unfcma}, i.e., this allows the adversary to check whether its message-tag pairs verify with the current key. Now, there is no ``ideal'' $\O{VERIFY}$ oracle in the game anymore which checks the list $\mathcal{L}$, and instead, this check takes place in the following winning condition which takes as input the output $(x^*,t^*)$ of the adversary and the game state $(\mathcal{L},k)$ as well as the game's parameters $\lambda$ and $\m$:
+\medskip
+
+\hspace{1cm}\procedure{$\mathsf{WinCond}_\m^{\mathsf{UNF\text{-}CMA}}(x^*,t^*,\mathcal{L},k,\lambda,\m)$}
+{\pcif k=\bot: k\sample\bin^\lambda\\
+d\gets \m.\ver(k,x,t)\\
+\pcif d=1\text{ and }(x^*,t^*)\notin\mathcal{L}: \pcreturn 1\\
+\pcelse \pcreturn 0
+}
+
+\medskip
+\noindent
+Now, the MAC-scheme $\m$ is a UNF-CMA if for all PPT adversaries
+\[\probsub{\adv\rightarrow\M{Gunf\text{-}cma}_\m}{\mathsf{WinCond}_\m^{\mathsf{UNF\text{-}CMA}}(x^*,t^*,\mathcal{L},k,\lambda,\m)=1}\]
+is negligible, where $(x^*,t^*)$ is the adversary's $\adv$ output in the end of the interaction $\adv\rightarrow\M{Gunf\text{-}cma}_\m$ and $(\mathcal{L},k)$ are the values of $\mathcal{L}$ and $k$ in the state of game $\M{Gunf\text{-}cma}_\m$ in the end of the interaction
+between the adversary $\adv$ with the game $\mathsf{Gunfcma}_\m$, and $\lambda$ and $\m$ are the parameters of game $\M{Gunf\text{-}cma}_\m$.
+
+
+
+
+\subsection{On Conceptual Appeal and Usability}\label{app:search:usability} We first discuss how easy it is to understand search and decision games, respectively, and then discuss how usable they are in proofs.
+\paragraph{On the Conceptual Appeal of Decision Games and its Limits.} Throughout our companion, we refer to \emph{real} and \emph{ideal} games and indistinguishability between them. In many cases, the view of an ideal game is rather natural. For example, pseudorandomness used in a real system should be indistinguishable from an ideal setting where one uses actual randomness (cf. Section~\ref{ssec:PRG} and Section~\ref{ssec:PRF}). Similarly, confidentiality of encryption means that real ciphertexts are indistinguishable from an ideal setting where ciphertexts carry no information about the message whatsoever (cf. Section~\ref{ssec:SE}).
+
+While we like decision games, we would not go as far as to claim that they are conceptually the clearest way to formalize \emph{every} primitive. For example, the decision game we gave for one-way functions (cf. Definition~\ref{def:OWF}) will require a reader a longer time to parse than our search game in Appendix~\ref{app:search:examples} or our experiment-based Definition~\ref{secdef:owf}. The reason that the decision game is harder to parse is that it requires a reader to figure out how the adversary can distinguish the two games, find the difference and then figure out that by plugging in a pre-image of $y$ into the $\mathsf{CHECK}$ oracle, the adversary can distinguish, because the $\mathsf{CHECK}$ oracle of $\textsf{Gowf}_f^0$ returns $1$ in this case, and the $\mathsf{CHECK}$ oracle of $\textsf{Gowf}_f^1$ returns $0$.
+
+We made similar experiences when presenting UNF-CMA security as a decision game in courses (cf. Section~\ref{ssec:mac-definition}). Course participants need to figure out that the adversary can distinguish the real game $\M{Gunf\text{-}cma}^0_\m$ and the ideal game $\M{Gunf\text{-}cma}^1_\m$ by asking to
+the $\mathsf{VERIFY}$ oracle a pair $(x,t)$ such that $1=\m.\ver(k,x,t)$, but $(x,t)\notin\mathcal{L}$. In this case, the $\mathsf{VERIFY}$ oracle in $\M{Gunf\text{-}cma}^0_\m$ will return $1$, but the $\mathsf{VERIFY}$ oracle in $\M{Gunf\text{-}cma}^1_\m$ will return $0$. In turn, in the search game we gave in Appendix~\ref{app:search:examples}, it is directly printed in the winning condition that this is what the adversary needs to do.
+
+\paragraph{On the Usability of Decision Games.} Given that there are cases where search games seems more intuitive than decision games, one might argue that courses should use both, search games and decision games, switching between them on the fly, using whichever seems most intuitive. Many courses do make this argument and follow the switching paradigm. Additionally, one might argue that the relation between search and decision games has conceptual depth in the sense that it is hard to build a primitive that is hard-to-distinguish from a primitive where something is hard-to-find. This distinction is obfuscated when using decision games only. The latter argument very much holds for one-way functions which are a very weak security notion. In turn, for UNF-CMA security of MACs which are used to build authenticated encryption (a hard-to-distinguish primitive), there is no conceptual depth, and the proof is just more straightforward when using UNF-CMA as a distinguishing notion. This is because the proof proceeds via
+\emph{game-hopping} (cf. Shoup~\cite{Shoup04}), i.e., we start with one game, then define an intermediate game, and show that the two are indistinguishable, and then also show that the intermediate and the final game are indistinguishable. So, the proof proceeds via a sequence of 3 games where one shows via \emph{reduction} that two subsequent games are indistinguishable. Here, it is more convenient to reduce indistinguishability to indistinguishability rather than to reduce indistinguishability of two games to the hardness of finding a value.
+
+Concretely, one can make a game-hop which moves from a system which runs MAC verification by a system which only accepts MACs which have been honestly generated, based on the list $\mathcal{L}$ (cf. Section~\ref{ssec:mac-definition}). As a result, the
+difference between our starting game and our immediate game is very much aligned with the change between the real game $\M{Gunf\text{-}cma}^0_\m$ and the ideal game $\M{Gunf\text{-}cma}^1_\m$, and that's convenient in the reduction. So, decision games seem somehow be easier to use in game-hopping.
+
+Moreover---and that is an idea used extensively by Brzuska, Delignat-Lavaud, Fournet, Kohbrok and Kohlweiss~\cite{BDFKK18} and somewhat implicitly in Canetti~\cite{Canetti20} and Maurer~\cite{Maurer10} as well---it is extremely convenient if there is no \emph{post-processing} of the adversary's output---decision games achieve this. Namely, in Fig.~\ref{fig:reduction-example}, we can just ``glue'' the reduction to the game (and then get a bigger game) or to the adversary (and then get a bigger adversary). If there was post-processing on the \emph{left} of the adversary $\adv$, then the reduction might need to be both on the left and the right of the adversary $\adv$, so that the reduction can also post-process the adversary's output. Now, one needs to additionally prove that the reduction part on the left of the adversary can also be viewed as transforming the winning condition of the small game $GP$ into the winning condition of the big game $GS$. This is possible, too, but more cumbersome.
+
+Finally, mixing decision games and search games would require mixing different reduction styles. In turn, using decision games only means that we can stick to a single definitional paradigm throughout the course (except for the beginning of the course when we start with OWFs---essentially as a motivation for the use of indistinguishability), and reduce decision games to decision games only and that's simplifying much of our presentation, i.e., we do not need to switch between advantage (difference between two probabilities) and winning probability (a single probability) regularly. An interesting observation is that many definitional frameworks for cryptographic definitions (cf., e.g.,~\cite{Canetti20,Maurer10,BDFKK18}) use decision games only. This might be because decision games lend themselves nicely to proofs, but it might also be because of the next point, namely, that using decision games is (almost) without loss of generality (cf. Section~\ref{app:search:discussion}).
+In turn, considering search games only would be truly limiting, as they cannot be used to encode properties such as confidentiality of encryption schemes, since the fact that a value is hard to find is a quite weak property, i.e., it might be that half of a value is leaked despite the \emph{entire} value being hard to find, and that it too weak for confidentiality of encryption. See Section~\ref{sec:OWF:theorems} for examples of functions which are secure one-way functions and yet leak half of their value, and Remark~\ref{rmk:IND-CPA} for a discussion of the definition of confidentiality of encryption.
+
+\subsection{Using Decision Games is (Almost) without Loss of Generality}\label{app:search:discussion}
+There is a simple way to transform a search game into a decision game.
+Namely, one can add a $\O{CHECK}$ oracle which returns the output of the winning condition
+in the real game and which returns always $0$ in the ideal game. For example, the $\O{CHECK}$ oracle
+in Definition~\ref{def:OWF} can be seen as encoding the winning condition $\mathsf{WinCond}_f^\mathsf{OW}(x^*,y,\lambda,f)$
+for one-wayness which we defined in Appendix~\ref{app:search:examples}.
+
+If one wanted to turn this into a general, formal transformation, one would
+need to require that $\O{CHECK}$ can only be called once and that all other oracles cannot be
+called anymore after $\O{CHECK}$ has been called. Note that UNF-CMA security for MACs is a case where
+the general transformation yields a somewhat more artificial game than the direct approach, since the
+general transform would yield a game which contains both a $\O{VERIFY}$ and a $\O{CHECK}$ oracle.
+
+There are very few games where moving the winning condition into a $\O{CHECK}$ oracle is not possible;
+but before being able to give examples, we need to talk a bit about definitional styles.
+
+
+\paragraph{On exclusion, penalizing and filtering.}
+Rogaway and Zhang (RZ~\cite{RZ18}) discuss that there are several ways of dealing with adversaries who do something
+which they should not be doing. For concreteness, let us consider an adversary which submits to the $\O{CHECK}$ oracle
+in Definition~\ref{def:OWF} something which does not have length $\lambda$. RZ mention the following 3 styles which
+are common in the cryptographic literature:
+\begin{itemize}
+\item[(1)] Exclusion: We only quantify over PPT adversaries which returns something of length $\lambda$.
+\item[(2)] Penalizing: We allow all kind of PPT adversaries but declare that the adversary has ``lost'' if it does something forbidden.
+\item[(3)] Silencing: We do not process the adversary's query if it is forbidden.
+\end{itemize}
+For example, the $\O{CHECK}$ oracle in Definition~\ref{def:OWF} essentially uses silencing: If the adversary submits $x^*$ of length other than $\lambda$, the $\O{CHECK}$ oracles in both games return $0$, no matter whether $x^*$ is a pre-image of $y$ or not. In turn, the experiment-style Definition~\ref{secdef:owf} can be seen as an instance of penalizing: If the adversary returns
+something of a different length than $\lambda$, then the adversary is declared to have lost. We do not have examples of the exclusion-style in this document, but it would say something like this: ``For all PPT adversaries which only provide inputs $x^*$ of length $\lambda$ to $\O{CHECK}$...''
+
+Intuitively, \emph{silencing} yields the strongest adversary, followed by penalizing and exclusion. This is because an adversary which makes an illegal query in a game in the silencing style can still win, but the same adversary in a game in penalizing style has already lost. To see that penalizing is stronger than exclusion, we can simply observe that each adversary which is allowed in exclusion-style is also allowed in penalizing-style games, but not the other way round.
+
+\paragraph{On Loss of Generality.} A recent article on key exchange by Brzuska, Cremers, Jacobsen, Stabila and Warinschi (BCJSW~\cite{BCJSW25}) discuss that their definitions use \emph{silencing} whenever possible (to have the strongest adversary), and we also use the silencing style in our document. In fact, since we use games \emph{without post-processing}, we cannot even formalize the penalizing style. In turn, we could formalize the exclusion style.
+
+But BCJSW also discuss that sometimes, the \emph{penalizing} security definition style is simply more expressive than the silencing style. Concretely, this is the case when it is not known \emph{at the time of the query} whether the query is legal or not. Concretely, BCJSW consider the case of a key exchange protocol, where keys should look pseudorandom for all protocol sessions where the adversary remained passive. Keys being pseudorandom is modeled by the adversary being allowed to send a so-called $\O{TEST}$ query to a session which either returns the actual key (real game) or a random string of the same length (ideal game). Now, a key exchange protocol between two parties means that there are two protocol instances and one of them accepts before
+the other, and the adversary can then send a $\O{TEST}$ query to the first one which accepts. However, whether the adversary remains passive is only known once the final message was delivered to the 2nd protocol instance, and the adversary can still choose to interfere here.
+
+This corner-case is an example of a security model where \emph{post-processing} of the adversary's output seems necessary and our methodology of decision games where the adversary is the ``main routine'' and provides the main output cannot capture this case. Note, however, that this is not an issue of search games vs. decision games, since key exchange security is captured via indistinguishability games as well. The issue here, is the lack of post-processing. If we allow for post-processing also in decision games, then all search games in the framework outline in Section~\ref{app:search:def} can be turned into decision games.
+
