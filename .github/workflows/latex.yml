@@ -14,12 +14,12 @@ jobs:
         with:
           root_file: main.tex
       - name: Save pdf as articaft
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: compiled-book
           path: main.pdf
       - name: Save log as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: latex-log
           path: main.log
@@ -29,7 +29,7 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     steps:
       - name: Download pdf
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: compiled-book
       - name: Assemble the gh-pages deployment
